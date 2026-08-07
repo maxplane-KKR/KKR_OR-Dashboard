@@ -40,12 +40,19 @@ test('HTML ทั้งสองหน้าผูก manifest และ runtime
     const html = read(page);
     assert.match(html, /rel=["']manifest["'][^>]+href=["'](?:\/)?manifest\.webmanifest["']/i);
     assert.match(html, /pwa\/runtime\.js/i);
+    assert.match(html, /pwa\/runtime\.js\?v=3/i);
   }
+});
+
+test('runtime cache-busts dynamically loaded PWA scripts', () => {
+  const runtime = read(path.join('pwa', 'runtime.js'));
+  assert.match(runtime, /PWA_ASSET_VERSION/);
+  assert.match(runtime, /script\.src = path \+ '\?v=' \+ PWA_ASSET_VERSION/);
 });
 
 test('service worker มี cache version, navigation fallback และไม่ cache API', () => {
   const source = read('sw.js');
-  assert.match(source, /orq-pwa-v2/);
+  assert.match(source, /orq-pwa-v3/);
   assert.match(source, /offline\.html/);
   assert.match(source, /request\.url.*\/api|url\.pathname.*\/api/s);
   assert.match(source, /respondWith/);
