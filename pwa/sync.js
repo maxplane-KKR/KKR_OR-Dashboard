@@ -79,6 +79,37 @@
           notify('error', { error: error });
           throw error;
         });
+      }, function (error) {
+        if (!error || error.code !== 'STORAGE_UNAVAILABLE') throw error;
+        if (!isOnline()) {
+          notify('offline', { error: error, storageUnavailable: true });
+          throw error;
+        }
+        notify('syncing', { storageUnavailable: true });
+        return Promise.resolve().then(loader).then(function (response) {
+          if (!response || typeof response.ok !== 'boolean') {
+            throw new SyncError('RESPONSE_INVALID', 'ข้อมูลจาก API ไม่ถูกต้อง');
+          }
+          if (!response.ok) {
+            throw new SyncError(
+              response.error && response.error.code || 'API_ERROR',
+              response.error && response.error.message || 'โหลดข้อมูลไม่สำเร็จ'
+            );
+          }
+          notify('online', { storageUnavailable: true });
+          return {
+            ok: true,
+            data: response.data,
+            error: null,
+            meta: Object.assign({}, response.meta || {}, {
+              cached: false,
+              storageUnavailable: true
+            })
+          };
+        }, function (loaderError) {
+          notify('error', { error: loaderError, storageUnavailable: true });
+          throw loaderError;
+        });
       });
     }
 
