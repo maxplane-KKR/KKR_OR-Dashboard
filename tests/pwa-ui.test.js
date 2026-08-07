@@ -7,6 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const adminFile = path.join(__dirname, '..', 'Admin.html');
+const dashboardFile = path.join(__dirname, '..', 'Index.html');
 
 class FakeElement {
   constructor(id = '') {
@@ -237,4 +238,9 @@ test('static Admin requests all datalist options without a string payload', () =
   const html = fs.readFileSync(adminFile, 'utf8');
   assert.match(html, /loadSnapshot\('admin:options', function \(\) \{ return getOptions\(\); \}\)/);
   assert.doesNotMatch(html, /loadSnapshot\('admin:options', function \(\) \{ return getOptions\('surgeryType'\); \}\)/);
+});
+
+test('static Dashboard falls back to a direct API read when snapshot storage fails', () => {
+  const html = fs.readFileSync(dashboardFile, 'utf8');
+  assert.match(html, /catch\(storageError\)\{return\(await loadAllNetwork\(\)\)\.items\}/);
 });
