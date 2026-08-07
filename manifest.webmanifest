@@ -1,6 +1,7 @@
 {
   "name": "ORQ คิวห้องผ่าตัด",
   "short_name": "ORQ",
+  "id": "/Index.html",
   "start_url": "/Index.html",
   "scope": "/",
   "display": "standalone",
