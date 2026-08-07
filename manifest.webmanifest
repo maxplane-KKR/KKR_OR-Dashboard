@@ -1,0 +1,31 @@
+{
+  "name": "ORQ คิวห้องผ่าตัด",
+  "short_name": "ORQ",
+  "start_url": "/Index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f8fd",
+  "theme_color": "#062566",
+  "icons": [
+    {
+      "src": "Icon/orq-dashboard.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "จัดการคิว",
+      "short_name": "Admin",
+      "url": "/Admin.html?page=admin",
+      "icons": [
+        {
+          "src": "Icon/orq-admin.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

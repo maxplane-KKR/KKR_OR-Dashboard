@@ -1,0 +1,1949 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B3B9D">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script src="pwa/runtime.js"></script>
+  <title>หน้าจัดการคิว OR | โรงพยาบาลขอนแก่นราม</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&amp;family=Sarabun:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --surface-strong: #e2e8f0;
+      --line: #d6e0ea;
+      --line-strong: #b8c7d8;
+      --ink: #0f172a;
+      --muted: #5e6f84;
+      --blue: #0b3b9d;
+      --blue-deep: #062566;
+      --blue-soft: #eaf2ff;
+      --sky: #2c97d2;
+      --green: #0f8b6d;
+      --green-soft: #e5f7f0;
+      --amber: #a85e06;
+      --amber-soft: #fff4d8;
+      --danger: #b4233d;
+      --danger-soft: #fff0f2;
+      --focus: #f4c44e;
+      --shadow: 0 10px 28px rgba(6,37,102,.08);
+      --header: linear-gradient(103deg,#0b3b9d 0%,#062566 55%,#0b3b9d 100%);
+    }
+
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--canvas); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "Sarabun", "Segoe UI", sans-serif;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { color: inherit; }
+    [hidden] { display: none !important; }
+
+    .system-header {
+      position: relative;
+      z-index: 4;
+      background: var(--header);
+      color: #fff;
+      box-shadow: 0 9px 28px rgba(6,37,102,.24);
+    }
+    .header-inner {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      align-items: center;
+      gap: 18px;
+      width: min(100%,1920px);
+      margin: auto;
+      padding: 13px clamp(14px,2vw,32px);
+    }
+    .brand-lockup { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .logo-box {
+      display: grid;
+      place-items: center;
+      flex: 0 0 92px;
+      width: 92px;
+      height: 64px;
+      padding: 4px 7px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.9);
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+    }
+    .logo-box img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .brand-rule { align-self: stretch; width: 2px; margin: 6px 0; background: rgba(147,197,253,.34); }
+    .brand-copy { min-width: 0; }
+    .brand-copy h1 {
+      margin: 0;
+      font-family: "Outfit", "Sarabun", sans-serif;
+      font-size: clamp(22px,2.1vw,34px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+    }
+    .brand-copy p { margin: 4px 0 0; color: #c9e4ff; font-size: 13px; font-weight: 700; }
+    .header-meta { display: flex; align-items: stretch; justify-content: flex-end; gap: 10px; }
+    .refresh-box, .clock-box {
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 15px;
+      background: rgba(5,17,43,.45);
+      backdrop-filter: blur(12px);
+    }
+    .refresh-box { display: flex; align-items: center; gap: 10px; padding: 6px 7px 6px 13px; }
+    .refresh-copy { color: #d9e9fa; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .header-button {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      cursor: pointer;
+    }
+    .header-button[disabled] { cursor: wait; opacity: .56; }
+    .refresh-symbol { font-family: "Outfit", sans-serif; font-size: 24px; line-height: 1; }
+    .clock-box { min-width: 184px; padding: 8px 15px; text-align: right; }
+    .clock-date { color: #9edaff; font-size: 12px; font-weight: 700; }
+    .clock-time {
+      margin-top: 1px;
+      font-family: "Outfit", ui-monospace, monospace;
+      font-size: clamp(24px,2.1vw,34px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: .04em;
+    }
+
+    main { width: min(100%,1920px); margin: auto; padding: 14px clamp(10px,1.5vw,24px) 30px; }
+    .admin-workspace { display: grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap: 14px; align-items: start; }
+    .panel { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: var(--shadow); }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; padding: 11px 15px; border-bottom: 1px solid var(--line); background: var(--surface-soft); }
+    .panel-title { margin: 0; color: var(--blue-deep); font-size: 17px; font-weight: 800; }
+    .panel-subtitle { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+
+    .queue-form { padding: 14px; }
+    .form-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 11px; }
+    .form-field { min-width: 0; }
+    .form-field.span-2 { grid-column: span 2; }
+    .form-field.span-full { grid-column: 1 / -1; }
+    .form-label { display: block; margin: 0 0 5px; color: var(--blue-deep); font-size: 12px; font-weight: 800; }
+    .required-mark { color: var(--danger); }
+    .field-control {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 9px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+    textarea.field-control { min-height: 76px; resize: vertical; }
+    .field-control:hover { border-color: var(--sky); }
+    .field-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(11,59,157,.12); outline: 0; }
+    .choice-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+    .choice-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-soft);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .choice-item input { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--blue); }
+    .choice-empty { margin: 0; padding: 10px; color: var(--muted); font-size: 12px; }
+    .status-choice { display: flex; align-items: center; gap: 9px; min-height: 44px; }
+    .status-choice input { width: 22px; height: 22px; accent-color: var(--green); }
+    .form-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--line); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .button:disabled { cursor: wait; opacity: .55; }
+    .button-primary { background: var(--blue); color: #fff; }
+    .button-secondary { border-color: var(--line-strong); background: var(--surface); color: var(--blue-deep); }
+    .button-danger { border-color: #efb4bd; background: var(--danger-soft); color: var(--danger); }
+    .button-quiet { border-color: var(--line); background: var(--surface-soft); color: var(--ink); }
+
+    .list-tools { padding: 11px 12px; border-bottom: 1px solid var(--line); }
+    .scope-buttons { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; }
+    .scope-button {
+      border-color: var(--scope-accent);
+      background: var(--scope-soft);
+      color: var(--scope-accent);
+      transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+    .scope-button[data-scope="TODAY"] { --scope-accent: var(--blue); --scope-soft: var(--blue-soft); }
+    .scope-button[data-scope="FUTURE"] { --scope-accent: var(--green); --scope-soft: var(--green-soft); }
+    .scope-button[data-scope="RANGE"] { --scope-accent: var(--amber); --scope-soft: var(--amber-soft); }
+    .scope-button[data-scope="ALL"] { --scope-accent: #475569; --scope-soft: #eef2f7; }
+    .scope-button:hover { border-color: var(--scope-accent); box-shadow: 0 0 0 3px var(--scope-soft); transform: translateY(-1px); }
+    .scope-button[aria-pressed="true"] {
+      border-color: var(--scope-accent);
+      background: var(--scope-accent);
+      color: #fff;
+      box-shadow: 0 0 0 3px var(--scope-soft), 0 6px 14px rgba(15,23,42,.14);
+    }
+    .scope-button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .scope-button { transition: none; }
+      .scope-button:hover { transform: none; }
+    }
+    .range-controls { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)) auto; gap: 7px; margin-top: 8px; }
+    .scope-stamp { display: inline-flex; align-items: center; min-height: 36px; padding: 5px 9px; border-radius: 8px; background: var(--blue-soft); color: var(--blue-deep); font-size: 11px; font-weight: 800; }
+
+    .export-tools { display: grid; grid-template-columns: minmax(112px,.8fr) minmax(126px,1fr) auto; gap: 7px; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--line); }
+    .export-field[hidden] { display: none; }
+
+    .list-state { display: grid; place-items: center; min-height: 160px; padding: 28px; text-align: center; }
+    .list-state[data-state="error"] { min-height: 0; margin: 10px; padding: 12px; border: 1px solid #efb4bd; border-radius: 10px; background: var(--danger-soft); text-align: left; }
+    .state-title { font-weight: 800; }
+    .state-detail { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .loading-ring { width: 30px; height: 30px; margin-bottom: 9px; border: 3px solid var(--line); border-top-color: var(--blue); border-radius: 50%; animation: spin 850ms linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th { min-height: 44px; padding: 10px 6px; border-right: 1px solid var(--line); background: var(--surface-strong); color: var(--ink); font-size: 11px; font-weight: 800; }
+    th:last-child { border-right: 0; }
+    td { padding: 9px 6px; border-top: 1px solid var(--line); border-right: 1px solid var(--line); font-size: 11px; line-height: 1.35; text-align: center; vertical-align: middle; overflow-wrap: anywhere; }
+    td:last-child { border-right: 0; }
+    tr.is-completed { background: var(--green-soft); }
+    .cell-primary { display: block; font-weight: 800; }
+    .cell-secondary { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .gender-label { display: inline-block; padding: 3px 8px; border: 1px solid transparent; border-radius: 7px; font-weight: 800; line-height: 1.2; }
+    .gender-label.is-male { color: #2563a9; border-color: #bfdbfe; background: #eff6ff; }
+    .gender-label.is-female { color: #b44b78; border-color: #f5c2d8; background: #fdf2f8; }
+    .status-toggle { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; font-weight: 800; cursor: pointer; }
+    .status-toggle input { width: 20px; height: 20px; accent-color: var(--green); }
+    .row-actions { display: flex; justify-content: center; gap: 5px; }
+    .icon-button { width: 44px; min-width: 44px; min-height: 44px; padding: 0; }
+    .status-options{display:grid;gap:5px;justify-content:center;min-width:112px}
+    .status-choice{min-height:34px;display:flex;align-items:center;gap:7px;padding:4px 7px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--muted);font-weight:700;cursor:pointer;transition:background .16s ease,border-color .16s ease,box-shadow .16s ease}
+    .status-choice input{appearance:none;-webkit-appearance:none;width:21px;height:21px;min-width:21px;margin:0;border:2px solid #94a3b8;border-radius:5px;background:#fff;display:grid;place-items:center;cursor:pointer}
+    .status-choice input::before{content:'✓';color:#fff;font-size:14px;font-weight:900;line-height:1;transform:scale(0);transition:transform .12s ease}
+    .status-choice input:checked::before{transform:scale(1)}
+    .status-choice[data-status="waiting"]:has(input:checked){color:#c85106;border-color:#fb923c;background:#fff7ed;box-shadow:0 3px 9px rgba(249,115,22,.13)}
+    .status-choice[data-status="waiting"] input:checked{border-color:#f97316;background:#f97316}
+    .status-choice[data-status="completed"]:has(input:checked){color:#087a58;border-color:#34b98a;background:#ecfdf5;box-shadow:0 3px 9px rgba(16,185,129,.14)}
+    .status-choice[data-status="completed"] input:checked{border-color:#10b981;background:#10b981}
+    .status-choice input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+    .status-choice:has(input:disabled){opacity:.55;cursor:wait}
+    .row-actions .icon-button{font-size:16px}
+    .button-excel{border-color:#185c37!important;background:linear-gradient(145deg,#278654,#185c37)!important;color:#fff!important;box-shadow:0 5px 12px rgba(33,115,70,.22)!important}
+    .button-excel:hover{background:linear-gradient(145deg,#2e9460,#1b663e)!important}
+    .button-excel i{margin-right:6px}
+    /* PT-inspired queue rows */
+    .table-wrap table{border-collapse:separate;border-spacing:0 7px;padding:0 6px}
+    .table-wrap thead th{border-bottom:1px solid var(--line)}
+    .table-wrap tbody tr{filter:drop-shadow(0 4px 7px rgba(6,37,102,.08))}
+    .table-wrap tbody td{background:#fff;border-top:1px solid #e5edf5;border-bottom:1px solid #e5edf5}
+    .table-wrap tbody td:first-child{border-left:4px solid #f97316;border-radius:11px 0 0 11px}
+    .table-wrap tbody td:last-child{border-radius:0 11px 11px 0}
+    .table-wrap tbody tr.is-completed td{background:#f0fdf8;border-color:#bfe8d8}
+    .table-wrap tbody tr.is-completed td:first-child{border-left-color:#10b981}
+    .mobile-queue-list { display: none; }
+    .load-more-wrap { display: flex; justify-content: center; padding: 10px; border-top: 1px solid var(--line); }
+
+    .bottom-tabs { display: none; }
+    .toast-region {
+      position: fixed;
+      z-index: 20;
+      top: 92px;
+      right: 14px;
+      max-width: min(380px,calc(100vw - 28px));
+      min-height: 44px;
+      padding: 11px 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: var(--surface);
+      box-shadow: 0 16px 40px rgba(6,37,102,.2);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .toast-region[data-kind="error"] { border-color: #efb4bd; background: var(--danger-soft); color: var(--danger); }
+    .toast-region[data-kind="success"] { border-color: #a8dfcc; background: var(--green-soft); color: var(--green); }
+
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    @media (max-width:1199px) {
+      body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+      .admin-workspace { display: block; }
+      .form-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .panel[data-mobile-panel="form"] { display: block; }
+      .panel[data-mobile-panel="list"] { display: none; }
+      .panel[data-mobile-active="true"] { display: block; }
+      .panel[data-mobile-active="false"] { display: none; }
+      .bottom-tabs {
+        position: fixed;
+        z-index: 12;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: repeat(3,minmax(0,1fr));
+        gap: 7px;
+        padding: 8px max(10px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
+        border-top: 1px solid var(--line-strong);
+        background: rgba(255,255,255,.96);
+        box-shadow: 0 -10px 30px rgba(6,37,102,.12);
+        backdrop-filter: blur(12px);
+      }
+      .tab-button[aria-selected="true"] { background: var(--blue); color: #fff; }
+    }
+
+    @media (max-width:720px) {
+      .header-inner { grid-template-columns: 1fr; gap: 9px; padding: 10px 11px; }
+      .brand-lockup { align-items: flex-start; gap: 9px; }
+      .logo-box { flex-basis: 72px; width: 72px; height: 52px; border-radius: 10px; }
+      .brand-rule { display: none; }
+      .brand-copy h1 { font-size: 21px; }
+      .brand-copy p { margin-top: 2px; font-size: 10px; }
+      .header-meta { justify-content: stretch; }
+      .refresh-box { flex: 1 1 auto; justify-content: space-between; }
+      .clock-box { flex: 0 0 156px; min-width: 0; padding-inline: 10px; }
+      .clock-date { font-size: 9px; }
+      .clock-time { font-size: 22px; }
+      main { padding: 9px 8px 16px; }
+      .panel-head { padding: 9px 11px; }
+      .queue-form { padding: 10px; }
+      .form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap: 9px 7px; }
+      .form-field.long-field, .form-field.span-full { grid-column: 1 / -1; }
+      .choice-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .form-actions { position: sticky; bottom: 0; margin-inline: -10px; padding: 10px; background: var(--surface); }
+      .scope-buttons { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .range-controls { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .range-controls .button { grid-column: 1 / -1; }
+      .export-tools { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .export-tools .button { grid-column: 1 / -1; }
+      .table-wrap { display: none; }
+      .mobile-queue-list { display: grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap: 7px; padding: 8px; }
+      .queue-card { min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+      .queue-card.is-completed { border-color: #a8dfcc; background: var(--green-soft); }
+      .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
+      .card-time { color: var(--blue-deep); font-family: "Outfit", sans-serif; font-size: 16px; font-weight: 800; }
+      .card-gender { width: max-content; margin-top: 5px; }
+      .card-hn { margin-top: 6px; font-family: "Outfit", sans-serif; font-size: 13px; font-weight: 800; overflow-wrap: anywhere; }
+      .card-detail { margin-top: 5px; color: var(--muted); font-size: 10px; line-height: 1.4; overflow-wrap: anywhere; }
+      .card-operation { color: var(--ink); font-weight: 800; }
+      .card-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin-top: 8px; }
+      .card-actions .button { padding-inline: 6px; font-size: 11px; }
+      .toast-region { top: auto; right: 8px; bottom: calc(74px + env(safe-area-inset-bottom)); left: 8px; max-width: none; }
+    }
+
+    @media (max-width:390px) {
+      .refresh-copy { font-size: 10px; }
+      .clock-box { flex-basis: 140px; }
+      .mobile-queue-list { gap: 6px; padding: 6px; }
+      .queue-card { padding: 8px; }
+    }
+
+    @media (forced-colors: active) {
+      .button, .field-control, .panel, .choice-item { border: 1px solid CanvasText; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+
+    /* Light theme: Instrument Deck (skeuomorphic iPad/tablet admin) */
+    body { background: linear-gradient(180deg, #f7faff 0%, var(--canvas) 44%, #e8f0fa 100%); }
+    .system-header { box-shadow: inset 0 -3px 0 rgba(4,27,78,.42), 0 8px 18px rgba(6,37,102,.2); }
+    .logo-box, .refresh-box, .clock-box, .header-button,
+    .panel, .field-control, .choice-item, .button, .scope-stamp,
+    .queue-card, .toast-region, .bottom-tabs {
+      box-shadow: inset 0 1px rgba(255,255,255,.82), inset 0 -3px 6px rgba(6,37,102,.14), 0 5px 10px rgba(6,37,102,.16);
+    }
+    .panel { border-color: var(--line-strong); border-radius: 10px; }
+    .panel-head { background: linear-gradient(180deg, #f7fbff 0%, #dfeaf6 100%); box-shadow: inset 0 1px rgba(255,255,255,.9), inset 0 -2px 4px rgba(6,37,102,.1); }
+    .field-control, .choice-item { border-radius: 8px; background: linear-gradient(180deg, #fff 0%, #edf4fc 100%); }
+    .field-control:focus { box-shadow: inset 0 2px 4px rgba(6,37,102,.14), 0 0 0 3px rgba(11,59,157,.16); }
+    .button, .header-button { border-radius: 8px; }
+    .button:active, .header-button:active { box-shadow: inset 0 3px 7px rgba(6,37,102,.3); }
+    .button-primary { box-shadow: inset 1px 1px 2px rgba(255,255,255,.3), inset -2px -2px 4px rgba(3,23,68,.24), 0 4px 8px rgba(6,37,102,.18); }
+    th { background: linear-gradient(180deg, #eef4fb 0%, #d6e2f0 100%); box-shadow: inset 0 1px rgba(255,255,255,.9), inset 0 -2px 3px rgba(6,37,102,.12); }
+    td { background: rgba(255,255,255,.45); }
+    @media (min-width: 721px) and (max-width: 1199px) {
+      .queue-form { padding: 18px; }
+      .form-grid { gap: 13px 11px; }
+      .panel-head { min-height: 68px; padding-inline: 18px; }
+    }
+
+    /* Responsive overflow guard: keep controls inside iPad/mobile viewport */
+    @media (max-width: 1199px) {
+      .panel-head { flex-wrap: wrap; min-width: 0; }
+      .panel-head > div:first-child { min-width: 0; flex: 1 1 220px; }
+      .panel-title, .panel-subtitle { overflow-wrap: anywhere; }
+    }
+    @media (max-width: 720px) {
+      .header-meta { min-width: 0; gap: 6px; }
+      .refresh-box { min-width: 0; gap: 6px; padding-inline: 8px; }
+      .refresh-copy { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+      .clock-box { flex-basis: 140px; min-width: 0; padding-inline: 8px; }
+      .scope-stamp { margin-left: auto; }
+      .form-actions { flex-wrap: wrap; }
+      .form-actions .button { flex: 1 1 140px; min-width: 0; }
+      .export-tools > *, .range-controls > * { min-width: 0; }
+      .export-tools select, .export-tools input, .range-controls input { width: 100%; min-width: 0; }
+      .bottom-tabs .button { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    }
+    @media (max-width: 360px) {
+      .header-meta { gap: 5px; }
+      .clock-box { flex-basis: 128px; }
+      .clock-time { font-size: 20px; }
+      .refresh-copy { font-size: 9px; }
+      .header-button { width: 40px; min-width: 40px; }
+    }
+    /* Admin form behavior v2: calm surfaces and equal two-column grid */
+    .logo-box, .refresh-box, .clock-box, .header-button,
+    .panel, .panel-head, .field-control, .choice-item, .button, .scope-stamp,
+    .queue-card, .toast-region, .bottom-tabs, th {
+      box-shadow: 0 2px 5px rgba(6,37,102,.08);
+    }
+    .panel { border-radius: 12px; }
+    .panel-head, .field-control, .choice-item, .button { border-radius: 10px; }
+    .refresh-box { gap: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+    .header-button { width: 34px; height: 34px; min-height: 34px; border-radius: 9px; }
+    .refresh-symbol { font-size: 18px; }
+    .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .form-field.span-2, .form-field.span-full { grid-column: 1 / -1; }
+    @media (max-width: 1199px) {
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; }
+      .form-field.span-2, .form-field.span-full { grid-column: 1 / -1; }
+      .panel-head { padding: 10px 12px; }
+    }
+    @media (max-width: 360px) {
+      .header-button { width: 32px; height: 32px; min-height: 32px; }
+      .refresh-symbol { font-size: 17px; }
+    }
+    /* Admin header placement v3 */
+    .panel-head-actions { display: flex; align-items: center; justify-content: flex-end; margin-left: auto; }
+    .panel-refresh-button { background: var(--blue); color: #fff; border-color: var(--blue-deep); box-shadow: 0 2px 5px rgba(6,37,102,.16); }
+    .panel-refresh-button:hover { background: var(--blue-deep); }
+    @media (max-width: 720px) {
+      .header-meta { justify-content: flex-end; }
+      .clock-box { margin-left: auto; }
+    }
+    /* Admin header emphasis v4 */
+    .logo-box { flex-basis: 104px; width: 104px; height: 72px; border-radius: 15px; }
+    .brand-copy h1 { font-size: clamp(28px, 3vw, 42px); letter-spacing: -.03em; }
+    .brand-copy p { font-size: 15px; font-weight: 800; }
+    .surgery-types-field { min-width: 0; }
+    .surgery-types-field .choice-grid { grid-template-columns: 1fr; }
+    @media (max-width: 720px) {
+      .logo-box { flex-basis: 88px; width: 88px; height: 62px; }
+      .brand-copy h1 { font-size: 26px; }
+      .brand-copy p { font-size: 11px; }
+      .surgery-types-field { grid-column: span 1; }
+    }
+    /* Hospital title icon and compact surgery-type copy */
+    .brand-title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .hospital-title-icon { display: inline-grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.55); border-radius: 8px; background: rgba(255,255,255,.12); box-shadow: 0 2px 4px rgba(0,0,0,.16); }
+    .hospital-title-icon svg { display: block; width: 23px; height: 23px; }
+    .brand-title-row h1 { min-width: 0; }
+    .surgery-types-field .form-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    @media (max-width: 720px) {
+      .hospital-title-icon { flex-basis: 26px; width: 26px; height: 26px; border-radius: 7px; }
+      .hospital-title-icon svg { width: 20px; height: 20px; }
+    }
+    /* Responsive header v5: stable brand lockup across phone/tablet/desktop */
+    .header-inner, .brand-lockup, .brand-copy, .header-meta { min-width: 0; }
+    .brand-title-row h1 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    @media (min-width: 721px) {
+      .brand-copy { min-width: 180px; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { grid-template-columns: 1fr; gap: 8px; padding: 8px 10px 9px; }
+      .brand-lockup { width: 100%; align-items: center; gap: 8px; }
+      .logo-box { flex: 0 0 64px; width: 64px; height: 48px; padding: 3px 5px; border-radius: 10px; }
+      .brand-rule { display: none; }
+      .brand-copy { flex: 1 1 auto; min-width: 0; }
+      .brand-title-row { gap: 6px; align-items: center; }
+      .brand-title-row h1 { font-size: clamp(19px, 6.2vw, 25px); line-height: 1.05; }
+      .hospital-title-icon { flex-basis: 24px; width: 24px; height: 24px; border-radius: 7px; }
+      .hospital-title-icon svg { width: 18px; height: 18px; }
+      .brand-copy p { max-width: 100%; margin-top: 2px; font-size: clamp(9px, 3vw, 12px); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .header-meta { width: 100%; min-width: 0; justify-content: flex-end; gap: 0; }
+      .clock-box { flex: 0 1 174px; min-width: 0; width: auto; padding: 6px 9px; border-radius: 11px; }
+      .clock-date { font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .clock-time { font-size: clamp(20px, 6vw, 25px); }
+    }
+    @media (max-width: 380px) {
+      .header-inner { padding-inline: 8px; }
+      .logo-box { flex-basis: 60px; width: 60px; height: 46px; }
+      .brand-title-row h1 { font-size: 20px; }
+      .brand-copy p { font-size: 9px; }
+      .clock-box { flex-basis: 150px; padding-inline: 8px; }
+      .clock-date { font-size: 8px; }
+      .clock-time { font-size: 20px; }
+    }
+    /* Responsive header v6: one-line title and clock across mobile widths */
+    @media (max-width: 720px) {
+      .header-inner { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 8px 10px; }
+      .brand-lockup { width: auto; min-width: 0; align-items: center; gap: 6px; }
+      .logo-box { flex: 0 0 58px; width: 58px; height: 44px; padding: 3px 5px; border-radius: 9px; }
+      .brand-copy { flex: 1 1 auto; min-width: 0; }
+      .brand-title-row { gap: 5px; min-width: 0; }
+      .hospital-title-icon { flex-basis: 22px; width: 22px; height: 22px; border-radius: 6px; }
+      .hospital-title-icon svg { width: 17px; height: 17px; }
+      .brand-title-row h1 { font-size: clamp(17px, 5.2vw, 22px); line-height: 1; }
+      .brand-copy p { margin-top: 2px; font-size: 9px; line-height: 1.05; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .header-meta { width: auto; min-width: 0; gap: 0; justify-content: flex-end; }
+      .clock-box { flex: 0 0 142px; width: 142px; min-width: 142px; padding: 5px 7px; border-radius: 10px; }
+      .clock-date { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .clock-time { font-size: clamp(19px, 5.8vw, 24px); }
+    }
+    @media (max-width: 380px) {
+      .header-inner { gap: 4px; padding-inline: 7px; }
+      .logo-box { flex-basis: 50px; width: 50px; height: 40px; padding-inline: 4px; }
+      .brand-lockup { gap: 5px; }
+      .brand-title-row { gap: 4px; }
+      .hospital-title-icon { flex-basis: 20px; width: 20px; height: 20px; }
+      .hospital-title-icon svg { width: 15px; height: 15px; }
+      .brand-title-row h1 { font-size: 17px; }
+      .brand-copy p { font-size: 8px; }
+      .clock-box { flex-basis: 118px; width: 118px; min-width: 118px; padding-inline: 6px; }
+      .clock-date { font-size: 7px; }
+      .clock-time { font-size: 18px; }
+    }
+    .surgery-type-input-label { display: none; }
+    /* Responsive header v7: larger readable header across all formats */
+    .header-inner { padding-top: 16px; padding-bottom: 16px; }
+    .logo-box { flex-basis: 116px; width: 116px; height: 80px; border-radius: 16px; }
+    .brand-lockup { gap: 16px; }
+    .brand-title-row { gap: 9px; }
+    .brand-copy h1 { font-size: clamp(32px, 3.3vw, 48px); line-height: 1.04; }
+    .brand-copy p { margin-top: 5px; font-size: 17px; }
+    .hospital-title-icon { flex-basis: 34px; width: 34px; height: 34px; border-radius: 9px; }
+    .hospital-title-icon svg { width: 26px; height: 26px; }
+    .clock-box { min-width: 210px; padding: 10px 17px; border-radius: 16px; }
+    .clock-date { font-size: 13px; }
+    .clock-time { font-size: clamp(30px, 2.5vw, 40px); }
+    @media (min-width: 721px) and (max-width: 1199px) {
+      .header-inner { padding: 15px 18px; gap: 14px; }
+      .logo-box { flex-basis: 112px; width: 112px; height: 78px; }
+      .brand-lockup { gap: 14px; }
+      .brand-copy h1 { font-size: clamp(31px, 4vw, 44px); }
+      .brand-copy p { font-size: 16px; }
+      .hospital-title-icon { flex-basis: 32px; width: 32px; height: 32px; }
+      .hospital-title-icon svg { width: 24px; height: 24px; }
+      .clock-box { min-width: 198px; padding: 9px 14px; }
+      .clock-date { font-size: 12px; }
+      .clock-time { font-size: 36px; }
+    }
+    @media (max-width: 720px) {
+      .header-inner { padding: 10px 10px; gap: 6px; }
+      .brand-lockup { gap: 6px; }
+      .logo-box { flex-basis: 60px; width: 60px; height: 48px; border-radius: 10px; }
+      .brand-title-row { gap: 5px; }
+      .hospital-title-icon { flex-basis: 24px; width: 24px; height: 24px; border-radius: 7px; }
+      .hospital-title-icon svg { width: 19px; height: 19px; }
+      .brand-title-row h1 { font-size: clamp(19px, 5.6vw, 24px); line-height: 1; }
+      .brand-copy p { margin-top: 3px; font-size: 10px; }
+      .clock-box { flex-basis: 148px; width: 148px; min-width: 148px; padding: 7px 8px; border-radius: 11px; }
+      .clock-date { font-size: 9px; }
+      .clock-time { font-size: clamp(21px, 6vw, 27px); }
+    }
+    @media (max-width: 380px) {
+      .header-inner { padding: 8px 7px; gap: 4px; }
+      .logo-box { flex-basis: 52px; width: 52px; height: 42px; padding-inline: 4px; }
+      .brand-lockup { gap: 5px; }
+      .brand-title-row { gap: 4px; }
+      .hospital-title-icon { flex-basis: 21px; width: 21px; height: 21px; }
+      .hospital-title-icon svg { width: 16px; height: 16px; }
+      .brand-title-row h1 { font-size: 18px; }
+      .brand-copy p { font-size: 8px; }
+      .clock-box { flex-basis: 126px; width: 126px; min-width: 126px; padding-inline: 6px; }
+      .clock-date { font-size: 7px; }
+      .clock-time { font-size: 19px; }
+    }
+    /* Header icon placement v8: align with title marker */
+    .hospital-title-icon { margin-left: -8px; }
+    @media (max-width: 720px) {
+      .hospital-title-icon { margin-left: -5px; }
+    }
+    @media (max-width: 380px) {
+      .hospital-title-icon { margin-left: -3px; }
+    }
+    /* Mobile header v9: compact clock, protected title width */
+    @media (max-width: 720px) {
+      .brand-copy { min-width: 0; }
+      .brand-title-row h1 { flex: 1 1 auto; min-width: 0; font-size: clamp(20px, 5.8vw, 25px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .clock-box { flex: 0 0 126px; width: 126px; min-width: 126px; padding: 6px 7px; }
+      .clock-date { font-size: 8px; }
+      .clock-time { font-size: clamp(19px, 5vw, 23px); }
+    }
+    @media (max-width: 380px) {
+      .brand-title-row h1 { font-size: 18px; }
+      .clock-box { flex-basis: 108px; width: 108px; min-width: 108px; padding-inline: 5px; }
+      .clock-date { font-size: 7px; }
+      .clock-time { font-size: 17px; }
+    }
+    /* Header icon placement v10: move icon to arrow anchor */
+    .brand-title-row { transform: translateX(-8px); }
+    .hospital-title-icon { margin-left: -8px; }
+    @media (max-width: 720px) {
+      .brand-title-row { transform: translateX(-4px); }
+      .hospital-title-icon { margin-left: -5px; }
+    }
+    @media (max-width: 380px) {
+      .brand-title-row { transform: translateX(-2px); }
+      .hospital-title-icon { margin-left: -3px; }
+    }
+    /* Header typography v11: preserve Thai vowels and remove icon */
+    .hospital-title-icon { display: none !important; }
+    .brand-title-row { transform: none; }
+    .brand-copy h1 { font-family: "Sarabun", "Segoe UI", sans-serif; line-height: 1.16; letter-spacing: -.02em; }
+    @media (max-width: 720px) {
+      .brand-title-row { transform: none; }
+      .brand-title-row h1 { line-height: 1.2; }
+    }
+    /* iPad/tablet: improve queue-list readability */
+    @media (min-width: 721px) and (max-width: 1199px) {
+      .table-wrap th { font-size: 13px; }
+      .table-wrap td { padding-block: 12px; font-size: 14px; line-height: 1.45; }
+      .table-wrap .cell-secondary { font-size: 12px; }
+      .table-wrap .status-choice { font-size: 13px; }
+    }
+
+    /* Frequent words panel */
+    .frequent-words-panel { margin-top: 14px; }
+    .frequent-words-tools {
+      display: grid;
+      grid-template-columns: minmax(150px,.7fr) minmax(220px,1.3fr) auto;
+      gap: 8px;
+      align-items: end;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .frequent-words-tools .form-label { margin-bottom: 5px; }
+    .frequent-words-current-group { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-bottom: 1px solid var(--line); background: var(--blue-soft); color: var(--blue-deep); font-size: 12px; }
+    .frequent-words-current-group strong { font-weight: 800; }
+    .frequent-words-table th:nth-child(1) { width: 56%; }
+    .frequent-words-table th:nth-child(2) { width: 24%; }
+    .frequent-words-table th:nth-child(3) { width: 20%; }
+    .frequent-words-table td { text-align: left; }
+    .frequent-words-table td:last-child { text-align: center; }
+    .frequent-word-value { font-weight: 800; overflow-wrap: anywhere; }
+    .frequent-word-key { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .frequent-word-actions { display: flex; justify-content: center; gap: 5px; }
+    .frequent-words-card-list { display: none; }
+    .frequent-word-card { min-width: 0; padding: 10px; border-bottom: 1px solid var(--line); }
+    .frequent-word-card:last-child { border-bottom: 0; }
+    .frequent-word-card-head { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+    .frequent-word-card-type { color: var(--blue-deep); font-size: 12px; font-weight: 800; }
+    .frequent-word-card-date { color: var(--muted); font-size: 10px; }
+    .frequent-word-card .frequent-word-value { margin-top: 7px; font-size: 14px; }
+    .frequent-word-card .frequent-word-actions { justify-content: stretch; margin-top: 9px; }
+    .frequent-word-card .frequent-word-actions .button { flex: 1 1 0; }
+    .frequent-word-editing { background: var(--blue-soft); }
+    @media (max-width: 720px) {
+      .frequent-words-panel { margin-top: 0; }
+      .frequent-words-tools { grid-template-columns: 1fr; align-items: stretch; }
+      .frequent-words-tools .button { width: 100%; }
+      .frequent-words-table-wrap { display: none; }
+      .frequent-words-card-list { display: block; }
+      .frequent-word-actions .button { min-width: 0; padding-inline: 8px; }
+    }
+    @media (max-width: 360px) {
+      .bottom-tabs { gap: 4px; padding-inline: 6px; }
+      .bottom-tabs .button { padding-inline: 5px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="system-header">
+    <div class="header-inner">
+      <div class="brand-lockup">
+        <div class="logo-box">
+          <img src="https://drive.google.com/thumbnail?id=1LSx0bDYjdJJBQXKG_vGQ7uUMS6i5UDlI&amp;sz=w1000"
+               alt="โลโก้โรงพยาบาลขอนแก่นราม"
+               onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1LSx0bDYjdJJBQXKG_vGQ7uUMS6i5UDlI&amp;sz=w800'">
+        </div>
+        <div class="brand-rule" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <div class="brand-title-row">
+            <h1>หน้าจัดการคิว OR</h1>
+          </div>
+          <p>โรงพยาบาลขอนแก่นราม</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="clock-box">
+          <div id="currentDateStr" class="clock-date">กำลังอ่านวันที่...</div>
+          <div id="currentTimeStr" class="clock-time">--:--:--</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="admin-workspace">
+      <section id="panelForm" class="panel" data-mobile-panel="form" data-mobile-active="true" tabindex="-1" aria-labelledby="formTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="formTitle" class="panel-title">เพิ่มคิวผ่าตัด</h2>
+            <p class="panel-subtitle">กรอกข้อมูลให้ครบ ระบบจะตรวจสอบอีกครั้งก่อนบันทึก</p>
+          </div>
+        </div>
+        <form id="adminForm" class="queue-form" novalidate>
+          <input id="editingId" type="hidden">
+          <input id="fieldChecked" type="checkbox" hidden>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label" for="fieldDateTime">วันที่และเวลา <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="fieldDateTime" class="field-control" type="datetime-local" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldHN">HN <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="fieldHN" class="field-control" type="text" autocomplete="off" required>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldAge">อายุ</label>
+              <input id="fieldAge" class="field-control" type="number" min="0" step="1" inputmode="numeric">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldGender">เพศ</label>
+              <select id="fieldGender" class="field-control">
+                <option value="">เลือกเพศ</option><option value="ชาย">ชาย</option><option value="หญิง">หญิง</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldWardOpd">Ward/OPD</label>
+              <input id="fieldWardOpd" class="field-control" type="text" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldOrRoom">OR Room</label>
+              <select id="fieldOrRoom" class="field-control">
+                <option value="">เลือกห้อง</option><option>OR 1</option><option>OR 2</option><option>OR 3</option><option>OR 4</option><option>Lasik</option><option>Laser</option><option>Scope 1</option><option>Scope 2</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldDiagnosis">Diagnosis</label>
+              <input id="fieldDiagnosis" class="field-control" type="text" list="diagnosisOptions" autocomplete="off">
+              <datalist id="diagnosisOptions"></datalist>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldOperation">Operation <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="fieldOperation" class="field-control" type="text" list="operationOptions" autocomplete="off" required>
+              <datalist id="operationOptions"></datalist>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldSurgeon">Surgeon <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="fieldSurgeon" class="field-control" type="text" list="surgeonOptions" autocomplete="off" required>
+              <datalist id="surgeonOptions"></datalist>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldAnesthetist">Anesthetist</label>
+              <input id="fieldAnesthetist" class="field-control" type="text" list="anesthetistOptions" autocomplete="off">
+              <datalist id="anesthetistOptions"></datalist>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldAnesthesia">Anesthesia</label>
+              <select id="fieldAnesthesia" class="field-control">
+                <option value="">เลือกวิธี</option><option>LA</option><option>TPC</option><option>RB</option><option>BB</option><option>IVS</option><option>SB</option><option>EB</option><option>GA</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldRights">สิทธิ์การรักษา</label>
+              <input id="fieldRights" class="field-control" type="text" list="rightsOptions" autocomplete="off">
+              <datalist id="rightsOptions"></datalist>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldSurgicalWound">Surgical Wound</label>
+              <select id="fieldSurgicalWound" class="field-control">
+                <option value="">เลือกประเภทแผล</option>
+                <option value="No Wound">No Wound</option>
+                <option value="Clean Wound">Clean Wound</option>
+                <option value="Clean-Contaminated Wound">Clean-Contaminated Wound</option>
+                <option value="Contaminated Wound">Contaminated Wound</option>
+                <option value="Dirty Wound">Dirty Wound</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="fieldNewSurgeryType">ประเภทการผ่าตัด</label>
+              <input id="fieldNewSurgeryType" class="field-control" type="text" list="surgeryTypeOptions" autocomplete="off" placeholder="เลือกหรือกรอกประเภทการผ่าตัด">
+              <datalist id="surgeryTypeOptions"></datalist>
+            </div>
+            <div class="form-field long-field span-full">
+              <label class="form-label" for="fieldComment">Comment</label>
+              <textarea id="fieldComment" class="field-control" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button id="cancelEditButton" class="button button-secondary" type="button" hidden>ยกเลิกแก้ไข</button>
+            <button id="submitButton" class="button button-primary" type="submit">บันทึกคิว</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="panelList" class="panel" data-mobile-panel="list" data-mobile-active="false" tabindex="-1" aria-labelledby="listTitle">
+        <div class="panel-head">
+          <div>
+            <h2 id="listTitle" class="panel-title">รายการคิว</h2>
+            <p class="panel-subtitle">โหลดครั้งละ 100 รายการ · <span id="currentScopeLabel">วันนี้</span></p>
+          </div>
+          <div class="panel-head-actions">
+            <button id="refreshAdminButton" class="header-button panel-refresh-button" title="รีเฟรชรายการ" type="button" aria-label="รีเฟรชรายการคิว">
+              <span class="refresh-symbol" aria-hidden="true">↻</span>
+            </button>
+          </div>
+        </div>
+        <div class="list-tools">
+          <div class="scope-buttons" aria-label="ขอบเขตรายการ">
+            <button class="button button-quiet scope-button" type="button" data-scope="TODAY" aria-pressed="true">วันนี้</button>
+            <button class="button button-quiet scope-button" type="button" data-scope="FUTURE" aria-pressed="false">วันถัดไป</button>
+            <button class="button button-quiet scope-button" type="button" data-scope="RANGE" aria-pressed="false">ช่วงวันที่</button>
+            <button class="button button-quiet scope-button" type="button" data-scope="ALL" aria-pressed="false">ทั้งหมด</button>
+          </div>
+          <div id="rangeControls" class="range-controls" hidden>
+            <label><span class="form-label">วันที่เริ่ม</span><input id="scopeStartDate" class="field-control" type="date"></label>
+            <label><span class="form-label">วันที่สิ้นสุด</span><input id="scopeEndDate" class="field-control" type="date"></label>
+            <button id="applyRangeButton" class="button button-secondary" type="button">แสดงช่วงนี้</button>
+          </div>
+          <div class="export-tools" aria-label="ส่งออก CSV">
+            <select id="exportMode" class="field-control" aria-label="ช่วงข้อมูลที่ส่งออก">
+              <option value="MONTH">รายเดือน</option><option value="YEAR">รายปี</option><option value="ALL">ทั้งหมด</option>
+            </select>
+            <input id="exportMonth" class="field-control export-field" type="month" aria-label="เดือนที่ส่งออก">
+            <input id="exportYear" class="field-control export-field" type="number" min="2000" max="2200" step="1" aria-label="ปี ค.ศ. ที่ส่งออก" hidden>
+            <button id="exportButton" class="button button-excel" type="button"><i class="fa-solid fa-file-excel" aria-hidden="true"></i><span>ส่งออก CSV</span></button>
+          </div>
+        </div>
+
+        <div id="listState" class="list-state" data-state="loading">
+          <div>
+            <div id="listLoadingRing" class="loading-ring" aria-hidden="true"></div>
+            <div id="listStateTitle" class="state-title">กำลังโหลดรายการ...</div>
+            <div id="listStateDetail" class="state-detail">กรุณารอสักครู่</div>
+          </div>
+        </div>
+        <div id="queueContent" hidden>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th style="width:14%">วันที่/เวลา</th><th style="width:14%">HN/เพศ</th><th style="width:15%">Surgeon</th><th style="width:22%">Operation</th><th style="width:20%">สถานะ</th><th style="width:15%">จัดการ</th></tr></thead>
+              <tbody id="listTableBody"></tbody>
+            </table>
+          </div>
+          <div id="mobileQueueList" class="mobile-queue-list"></div>
+          <div class="load-more-wrap"><button id="loadMoreButton" class="button button-secondary" type="button" hidden>โหลดอีก 100 รายการ</button></div>
+        </div>
+      </section>
+    </div>
+
+    <section id="panelFrequentWords" class="panel frequent-words-panel" data-mobile-panel="frequentWords" data-mobile-active="false" tabindex="-1" aria-labelledby="frequentWordsTitle">
+      <div class="panel-head">
+        <div>
+          <h2 id="frequentWordsTitle" class="panel-title">คำที่ใช้บ่อย</h2>
+          <p class="panel-subtitle">เลือกกลุ่มเพื่อดูคำ และเพิ่ม แก้ไข หรือลบคำแนะนำที่ใช้ในแบบฟอร์ม</p>
+        </div>
+      </div>
+      <form id="frequentWordsForm" class="frequent-words-tools" novalidate>
+        <label>
+          <span class="form-label">เลือกกลุ่มคำ</span>
+          <select id="frequentWordsGroup" class="field-control" required>
+            <option value="diagnosis">Diagnosis</option>
+            <option value="operation">Operation</option>
+            <option value="surgeon">Surgeon</option>
+            <option value="anesthetist">Anesthetist</option>
+            <option value="rights">สิทธิ์การรักษา</option>
+            <option value="surgeryType">ประเภทการผ่าตัด</option>
+          </select>
+        </label>
+        <label>
+          <span class="form-label">คำที่ใช้บ่อย</span>
+          <input id="frequentWordsValue" class="field-control" type="text" autocomplete="off" required placeholder="กรอกคำที่ต้องการบันทึก">
+        </label>
+        <div class="form-actions" style="margin:0;padding:0;border:0">
+          <button id="frequentWordsCancelButton" class="button button-secondary" type="button" hidden>ยกเลิก</button>
+          <button id="frequentWordsSubmitButton" class="button button-primary" type="submit">เพิ่มคำ</button>
+        </div>
+      </form>
+      <div class="frequent-words-current-group" aria-live="polite">
+        <span>รายการคำในกลุ่ม</span>
+        <strong id="frequentWordsCurrentGroup">Diagnosis</strong>
+      </div>
+      <div id="frequentWordsListState" class="list-state" data-state="loading">
+        <div>
+          <div id="frequentWordsLoadingRing" class="loading-ring" aria-hidden="true"></div>
+          <div id="frequentWordsStateTitle" class="state-title">กำลังโหลดคำที่ใช้บ่อย...</div>
+          <div id="frequentWordsStateDetail" class="state-detail">กรุณารอสักครู่</div>
+        </div>
+      </div>
+      <div id="frequentWordsContent" hidden>
+        <div class="table-wrap frequent-words-table-wrap">
+          <table class="frequent-words-table">
+            <thead><tr><th>คำ</th><th>วันที่สร้าง</th><th>จัดการ</th></tr></thead>
+            <tbody id="frequentWordsTableBody"></tbody>
+          </table>
+        </div>
+        <div id="frequentWordsCardList" class="frequent-words-card-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-tabs" aria-label="สลับหน้าจัดการคิว">
+    <button id="tabForm" class="button button-quiet tab-button" type="button" data-admin-tab="form" role="tab" aria-controls="panelForm" aria-selected="true">เพิ่ม/แก้ไขคิว</button>
+    <button id="tabList" class="button button-quiet tab-button" type="button" data-admin-tab="list" role="tab" aria-controls="panelList" aria-selected="false">รายการคิว</button>
+    <button id="tabFrequentWords" class="button button-quiet tab-button" type="button" data-admin-tab="frequentWords" role="tab" aria-controls="panelFrequentWords" aria-selected="false">คำที่ใช้บ่อย</button>
+  </nav>
+  <div id="toastRegion" class="toast-region" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+  <script id="or-admin-core">
+    'use strict';
+
+    let adminScope = 'TODAY';
+
+    function runServerFunction(name, payload) {
+      return new Promise(function (resolve, reject) {
+        if (globalThis.OR_API_CLIENT && globalThis.OR_PWA_RUNTIME && globalThis.OR_PWA_RUNTIME.isStatic) {
+          globalThis.OR_API_CLIENT.call(name, payload).then(resolve, reject);
+          return;
+        }
+        if (typeof google === 'undefined' || !google.script || !google.script.run) {
+          reject(new Error('ไม่พบการเชื่อมต่อ Google Apps Script'));
+          return;
+        }
+        var runner = google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);
+        payload === undefined ? runner[name]() : runner[name](payload);
+      });
+    }
+
+    function createAdminController(options) {
+      var deps = options || {};
+      var doc = deps.document;
+      var listQueues = deps.listQueues || function (request) { return runServerFunction('getQueues', request); };
+      var createQueue = deps.createQueue || function (payload) { return runServerFunction('createQueue', payload); };
+      var updateQueue = deps.updateQueue || function (payload) { return runServerFunction('updateQueue', payload); };
+      var deleteQueue = deps.deleteQueue || function (request) { return runServerFunction('deleteQueue', request); };
+      var setQueueStatus = deps.setQueueStatus || function (request) { return runServerFunction('setQueueStatus', request); };
+      var getOptions = deps.getOptions || function (type) { return runServerFunction('getDatalistOptions', type); };
+      var getFrequentWords = deps.getFrequentWords || function () { return runServerFunction('getDatalistEntries'); };
+      var createFrequentWord = deps.createFrequentWord || function (payload) { return runServerFunction('createDatalistOption', payload); };
+      var updateFrequentWord = deps.updateFrequentWord || function (payload) { return runServerFunction('updateDatalistOption', payload); };
+      var deleteFrequentWord = deps.deleteFrequentWord || function (payload) { return runServerFunction('deleteDatalistOption', payload); };
+      var exportQueues = deps.exportQueues || function (request) { return runServerFunction('exportQueues', request); };
+      var syncManager = deps.syncManager || globalThis.OR_SYNC_MANAGER || null;
+      var isStaticPwa = deps.isStaticPwa == null
+        ? Boolean(globalThis.OR_PWA_RUNTIME && globalThis.OR_PWA_RUNTIME.isStatic)
+        : Boolean(deps.isStaticPwa);
+      function invokeMutation(action, payload, serverCall) {
+        if (syncManager && isStaticPwa && typeof syncManager.queueMutation === 'function') {
+          return syncManager.queueMutation(action, payload, payload && payload.updatedAt || '');
+        }
+        return serverCall(payload);
+      }
+      function loadSnapshot(key, loader) {
+        if (syncManager && isStaticPwa && typeof syncManager.loadSnapshot === 'function') {
+          return syncManager.loadSnapshot(key, loader);
+        }
+        return loader();
+      }
+      function loadQueueData(request) {
+        if (!syncManager || !isStaticPwa || request && request.cursor != null) return listQueues(request);
+        var next = request || {};
+        var key = 'admin:queues:' + scopeRequestKey(next.scope || adminScope, next.startDate || '', next.endDate || '');
+        return loadSnapshot(key, function () { return listQueues(request); });
+      }
+      function loadOptionsData() {
+        return loadSnapshot('admin:options', function () { return getOptions('surgeryType'); });
+      }
+      function loadFrequentWordsData() {
+        return loadSnapshot('admin:frequentWords', function () { return getFrequentWords(); });
+      }
+      var createQueueServer = createQueue;
+      var updateQueueServer = updateQueue;
+      var deleteQueueServer = deleteQueue;
+      var setQueueStatusServer = setQueueStatus;
+      var createFrequentWordServer = createFrequentWord;
+      var updateFrequentWordServer = updateFrequentWord;
+      var deleteFrequentWordServer = deleteFrequentWord;
+      createQueue = function (payload) { return invokeMutation('createQueue', payload, createQueueServer); };
+      updateQueue = function (payload) { return invokeMutation('updateQueue', payload, updateQueueServer); };
+      deleteQueue = function (payload) { return invokeMutation('deleteQueue', payload, deleteQueueServer); };
+      setQueueStatus = function (payload) { return invokeMutation('setQueueStatus', payload, setQueueStatusServer); };
+      createFrequentWord = function (payload) { return invokeMutation('createDatalistOption', payload, createFrequentWordServer); };
+      updateFrequentWord = function (payload) { return invokeMutation('updateDatalistOption', payload, updateFrequentWordServer); };
+      deleteFrequentWord = function (payload) { return invokeMutation('deleteDatalistOption', payload, deleteFrequentWordServer); };
+      var askConfirm = deps.confirm || function (message) { return window.confirm(message); };
+      var downloadCsv = deps.downloadCsv || downloadCsvInBrowser;
+      var currentTime = deps.now || function () { return new Date(); };
+      var scheduleInterval = deps.setInterval || window.setInterval.bind(window);
+      var cancelInterval = deps.clearInterval || window.clearInterval.bind(window);
+      var isNarrow = deps.isNarrow || function () { return typeof window !== 'undefined' && window.matchMedia('(max-width:1199px)').matches; };
+      var scheduleTimeout = deps.setTimeout || function (callback, delay) { return window.setTimeout(callback, delay); };
+      var cancelTimeout = deps.clearTimeout || function (timer) { return window.clearTimeout(timer); };
+      var state = {
+        items: [],
+        scope: adminScope,
+        startDate: '',
+        endDate: '',
+        nextCursor: null,
+        requestSequence: 0,
+        submitting: false,
+        mutations: new Set(),
+        itemGenerations: new Map(),
+        deletedIds: new Set(),
+        formSession: 0,
+        optionsReady: false,
+        pendingSurgerySelections: null,
+        frequentWords: [],
+        frequentWordsFilter: 'diagnosis',
+        frequentWordsEditing: null,
+        frequentWordsSubmitting: false,
+        frequentWordsMutations: new Set(),
+        toastTimer: null,
+        clockTimer: null
+      };
+
+      function element(id) { return doc.getElementById(id); }
+      function createNode(tagName, className, text) {
+        var node = doc.createElement(tagName);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+      function responseData(response, fallback) {
+        if (!response || !response.ok) {
+          throw new Error(response && response.error && response.error.message ? response.error.message : fallback);
+        }
+        return response.data || {};
+      }
+      function isPendingResponse(response) {
+        return Boolean(response && response.ok && response.meta && response.meta.pending);
+      }
+      function pendingSyncMessage() { return 'บันทึกไว้แล้ว รอ sync เมื่อออนไลน์'; }
+      function errorText(error, fallback) { return error && error.message ? error.message : fallback; }
+      function showToast(message, kind) {
+        var toast = element('toastRegion');
+        var toastKind = kind || 'info';
+        if (state.toastTimer !== null) {
+          cancelTimeout(state.toastTimer);
+          state.toastTimer = null;
+        }
+        toast.textContent = message;
+        toast.dataset.kind = toastKind;
+        toast.hidden = false;
+        var delay = toastKind === 'error' ? 6000 : toastKind === 'success' ? 3500 : 4500;
+        state.toastTimer = scheduleTimeout(function () {
+          toast.hidden = true;
+          state.toastTimer = null;
+        }, delay);
+      }
+      function setListState(kind, title, detail) {
+        var holder = element('listState');
+        holder.dataset.state = kind;
+        holder.hidden = false;
+        element('listStateTitle').textContent = title;
+        element('listStateDetail').textContent = detail || '';
+        element('listLoadingRing').hidden = kind !== 'loading';
+        element('queueContent').hidden = true;
+        element('loadMoreButton').hidden = true;
+      }
+      function hideListState() {
+        element('listState').hidden = true;
+        element('queueContent').hidden = state.items.length === 0;
+        element('loadMoreButton').hidden = !state.nextCursor;
+      }
+
+      function frequentWordLabel(type) {
+        return {
+          diagnosis: 'Diagnosis', operation: 'Operation', surgeon: 'Surgeon',
+          anesthetist: 'Anesthetist', rights: 'สิทธิ์การรักษา', surgeryType: 'ประเภทการผ่าตัด'
+        }[type] || type || '-';
+      }
+      function frequentWordKey(item) { return String(item.type || '') + ':' + String(item.normalizedKey || ''); }
+      function normalizeLocalFrequentWordKey(value) {
+        return String(value == null ? '' : value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('th-TH');
+      }
+      function frequentWordOptionListId(type) {
+        return {
+          diagnosis: 'diagnosisOptions', operation: 'operationOptions', surgeon: 'surgeonOptions',
+          anesthetist: 'anesthetistOptions', rights: 'rightsOptions', surgeryType: 'surgeryTypeOptions'
+        }[type] || '';
+      }
+      function syncLocalDatalistOption(type, oldValue, newValue, remove) {
+        var holder = element(frequentWordOptionListId(type));
+        if (!holder) return;
+        var oldText = String(oldValue == null ? '' : oldValue).trim();
+        var nextText = String(newValue == null ? '' : newValue).trim();
+        var found = false;
+        var nextOptions = Array.prototype.slice.call(holder.children || []).filter(function (option) {
+          var optionValue = String(option.value == null ? option.textContent : option.value).trim();
+          if (oldText && optionValue === oldText) {
+            found = true;
+            if (remove) return false;
+            option.value = nextText;
+            option.textContent = nextText;
+          }
+          return true;
+        });
+        if (!remove && nextText && !found) {
+          var option = createNode('option');
+          option.value = nextText;
+          option.textContent = nextText;
+          nextOptions.push(option);
+        }
+        holder.replaceChildren.apply(holder, nextOptions);
+      }
+      function localFrequentWordItem(payload, saved, previous, pending) {
+        var item = Object.assign({}, previous || {}, payload || {}, saved || {});
+        item.type = String(item.type || (previous && previous.type) || '');
+        item.value = String(item.value || '');
+        item.normalizedKey = pending
+          ? normalizeLocalFrequentWordKey(item.value)
+          : String(item.normalizedKey || normalizeLocalFrequentWordKey(item.value));
+        item.createdAt = item.createdAt || (previous && previous.createdAt) || currentTime().toISOString();
+        return item;
+      }
+      function upsertLocalFrequentWord(item, previous) {
+        var previousKey = previous ? frequentWordKey(previous) : frequentWordKey(item);
+        var index = state.frequentWords.findIndex(function (record) { return frequentWordKey(record) === previousKey; });
+        if (index >= 0) state.frequentWords[index] = item;
+        else state.frequentWords.push(item);
+      }
+      function formatFrequentWordDate(value) {
+        var text = String(value == null ? '' : value).trim();
+        return text ? text.replace('T', ' ').replace(/\.\d{3}Z$/, '') : '-';
+      }
+      function setFrequentWordsState(kind, title, detail) {
+        var holder = element('frequentWordsListState');
+        holder.dataset.state = kind;
+        holder.hidden = false;
+        element('frequentWordsStateTitle').textContent = title;
+        element('frequentWordsStateDetail').textContent = detail || '';
+        element('frequentWordsLoadingRing').hidden = kind !== 'loading';
+        element('frequentWordsContent').hidden = true;
+      }
+      function hideFrequentWordsState() {
+        element('frequentWordsListState').hidden = true;
+        element('frequentWordsContent').hidden = state.frequentWords.length === 0;
+      }
+      function setFrequentWordsGroup(group) {
+        var value = String(group || 'diagnosis');
+        var allowed = { diagnosis: 1, operation: 1, surgeon: 1, anesthetist: 1, rights: 1, surgeryType: 1 };
+        state.frequentWordsFilter = Object.prototype.hasOwnProperty.call(allowed, value) ? value : 'diagnosis';
+        element('frequentWordsGroup').value = state.frequentWordsFilter;
+        element('frequentWordsCurrentGroup').textContent = frequentWordLabel(state.frequentWordsFilter);
+        renderFrequentWords();
+      }
+      function filteredFrequentWords() {
+        return state.frequentWords.filter(function (item) { return item.type === state.frequentWordsFilter; });
+      }
+      function makeFrequentWordActions(item) {
+        var actions = createNode('div', 'frequent-word-actions');
+        var busy = state.frequentWordsMutations.has(frequentWordKey(item));
+        actions.append(
+          makeActionButton('แก้ไขคำ', 'fa-pen', 'button-secondary', function () { editFrequentWord(item); }, busy),
+          makeActionButton('ลบคำ', 'fa-trash-can', 'button-danger', function () { removeFrequentWord(item); }, busy)
+        );
+        return actions;
+      }
+      function renderFrequentWordRow(item) {
+        var row = createNode('tr', state.frequentWordsEditing && frequentWordKey(state.frequentWordsEditing) === frequentWordKey(item) ? 'frequent-word-editing' : '');
+        var valueCell = createNode('td');
+        valueCell.appendChild(createNode('span', 'frequent-word-value', item.value || '-'));
+        valueCell.appendChild(createNode('span', 'frequent-word-key', item.normalizedKey || '-'));
+        row.appendChild(valueCell);
+        appendTextCell(row, formatFrequentWordDate(item.createdAt));
+        var actionsCell = createNode('td');
+        actionsCell.appendChild(makeFrequentWordActions(item));
+        row.appendChild(actionsCell);
+        return row;
+      }
+      function renderFrequentWordCard(item) {
+        var card = createNode('article', 'frequent-word-card' + (state.frequentWordsEditing && frequentWordKey(state.frequentWordsEditing) === frequentWordKey(item) ? ' frequent-word-editing' : ''));
+        var head = createNode('div', 'frequent-word-card-head');
+        head.appendChild(createNode('div', 'frequent-word-card-type', frequentWordLabel(item.type)));
+        head.appendChild(createNode('div', 'frequent-word-card-date', formatFrequentWordDate(item.createdAt)));
+        card.appendChild(head);
+        card.appendChild(createNode('div', 'frequent-word-value', item.value || '-'));
+        card.appendChild(makeFrequentWordActions(item));
+        return card;
+      }
+      function renderFrequentWords() {
+        var tableBody = element('frequentWordsTableBody');
+        var cardList = element('frequentWordsCardList');
+        var items = filteredFrequentWords();
+        tableBody.replaceChildren();
+        cardList.replaceChildren();
+        items.forEach(function (item) {
+          tableBody.appendChild(renderFrequentWordRow(item));
+          cardList.appendChild(renderFrequentWordCard(item));
+        });
+        if (!items.length) {
+          setFrequentWordsState('empty', 'ยังไม่มีคำที่ใช้บ่อย', state.frequentWords.length ? 'ไม่พบคำในกลุ่มที่เลือก' : 'เพิ่มคำใหม่ได้จากแบบฟอร์มด้านบน');
+          return;
+        }
+        hideFrequentWordsState();
+      }
+
+      function parseSurgeryTypes(value) {
+        if (Array.isArray(value)) return value.map(String);
+        try {
+          var parsed = JSON.parse(String(value || '[]'));
+          return Array.isArray(parsed) ? parsed.map(String) : [];
+        } catch (error) { return []; }
+      }
+      function itemGeneration(id) { return state.itemGenerations.get(id) || 0; }
+      function bumpItemGeneration(id) {
+        var next = itemGeneration(id) + 1;
+        state.itemGenerations.set(id, next);
+        return next;
+      }
+      function itemGenerationSnapshot() { return new Map(state.itemGenerations); }
+      function replaceLocalItem(item) {
+        if (!item || !item.id) return;
+        var index = state.items.findIndex(function (record) { return record.id === item.id; });
+        if (index >= 0) state.items[index] = Object.assign({}, state.items[index], item);
+      }
+      function reconcileListItems(incoming, snapshot, append) {
+        var currentById = new Map(state.items.map(function (item) { return [item.id, item]; }));
+        var reconciled = append ? state.items.slice() : [];
+        (incoming || []).forEach(function (serverItem) {
+          var id = serverItem.id;
+          if (!id || state.deletedIds.has(id)) return;
+          var changedAfterRequest = itemGeneration(id) !== (snapshot.get(id) || 0);
+          var chosen = changedAfterRequest ? currentById.get(id) : serverItem;
+          if (!chosen) return;
+          var existingIndex = reconciled.findIndex(function (item) { return item.id === id; });
+          if (existingIndex >= 0) reconciled[existingIndex] = chosen;
+          else reconciled.push(chosen);
+        });
+        return reconciled;
+      }
+      function scopeRequestKey(scope, startDate, endDate) {
+        return [scope, scope === 'RANGE' ? startDate : '', scope === 'RANGE' ? endDate : ''].join('|');
+      }
+      function appendTextCell(row, primary, secondary) {
+        var cell = createNode('td');
+        cell.appendChild(createNode('span', 'cell-primary', primary || '-'));
+        if (secondary) cell.appendChild(createNode('span', 'cell-secondary', secondary));
+        row.appendChild(cell);
+      }
+      function appendPatientCell(row, item) {
+        var cell = createNode('td');
+        cell.appendChild(createNode('span', 'cell-primary', item.hn || '-'));
+        var detail = createNode('span', 'cell-secondary');
+        if (item.gender) detail.appendChild(createNode('span', 'gender-label ' + (String(item.gender).indexOf('หญิง') >= 0 ? 'is-female' : 'is-male'), item.gender));
+        if (item.gender && item.age !== '') detail.appendChild(document.createTextNode(' · '));
+        if (item.age !== '') detail.appendChild(document.createTextNode(item.age + ' ปี'));
+        cell.appendChild(detail);
+        row.appendChild(cell);
+      }      function makeStatusOption(item, completed, labelText) {
+        var label = createNode('label', 'status-choice');
+        label.dataset.status = completed ? 'completed' : 'waiting';
+        var checkbox = createNode('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = Boolean(item.checked) === completed;
+        checkbox.disabled = state.mutations.has(item.id);
+        checkbox.setAttribute('aria-label', labelText + ' HN ' + String(item.hn || ''));
+        checkbox.addEventListener('change', function () {
+          if (!checkbox.checked) { checkbox.checked = true; return; }
+          changeQueueStatus(item.id, completed, null);
+        });
+        label.append(checkbox, createNode('span', '', labelText));
+        return label;
+      }
+      function makeStatusControls(item) {
+        var group = createNode('div', 'status-options');
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-label', 'สถานะคิว HN ' + String(item.hn || ''));
+        group.append(
+          makeStatusOption(item, false, 'รอผ่าตัด'),
+          makeStatusOption(item, true, 'เสร็จสิ้น')
+        );
+        return group;
+      }
+      function makeActionButton(label, iconClass, kind, handler, disabled) {
+        var button = createNode('button', 'button ' + kind + ' icon-button');
+        button.type = 'button';
+        button.title = label;
+        button.setAttribute('aria-label', label);
+        button.disabled = disabled;
+        var icon = createNode('i', 'fa-solid ' + iconClass);
+        icon.setAttribute('aria-hidden', 'true');
+        button.appendChild(icon);
+        button.addEventListener('click', handler);
+        return button;
+      }
+      function renderTableRow(item) {
+        var row = createNode('tr', item.checked ? 'is-completed' : '');
+        appendTextCell(row, formatDisplayDate(item.date), item.time);
+        appendPatientCell(row, item);
+        appendTextCell(row, item.surgeon, item.anesthetist);
+        appendTextCell(row, item.operation, item.orRoom);
+        var statusCell = createNode('td');
+        statusCell.appendChild(makeStatusControls(item));
+        row.appendChild(statusCell);
+        var actions = createNode('td');
+        var actionGroup = createNode('div', 'row-actions');
+        var busy = state.mutations.has(item.id);
+        actionGroup.append(
+          makeActionButton('แก้ไข', 'fa-pen', 'button-secondary', function () { editQueue(item.id); }, busy),
+          makeActionButton('ลบ', 'fa-trash-can', 'button-danger', function () { removeQueue(item.id); }, busy)
+        );
+        actions.appendChild(actionGroup);
+        row.appendChild(actions);
+        return row;
+      }
+      function renderCard(item) {
+        var card = createNode('article', 'queue-card' + (item.checked ? ' is-completed' : ''));
+        var head = createNode('div', 'card-head');
+        var when = createNode('div');
+        when.append(createNode('div', 'card-time', item.time || '--:--'), createNode('div', 'cell-secondary', formatDisplayDate(item.date) + ' · ' + (item.orRoom || '-')));
+        head.appendChild(when);
+        card.append(
+          head,
+          createNode('div', 'card-hn', item.hn || '-'),
+          createNode('div', 'card-gender gender-label ' + (String(item.gender || '').indexOf('หญิง') >= 0 ? 'is-female' : 'is-male'), item.gender || '-'),
+          createNode('div', 'card-detail card-operation', item.operation || '-'),
+          createNode('div', 'card-detail', 'Surgeon: ' + (item.surgeon || '-'))
+        );
+        card.appendChild(makeStatusControls(item));
+        var actions = createNode('div', 'card-actions row-actions');
+        var busy = state.mutations.has(item.id);
+        actions.append(
+          makeActionButton('แก้ไข', 'fa-pen', 'button-secondary', function () { editQueue(item.id); }, busy),
+          makeActionButton('ลบ', 'fa-trash-can', 'button-danger', function () { removeQueue(item.id); }, busy)
+        );
+        card.appendChild(actions);
+        return card;
+      }
+      function renderItems() {
+        var body = element('listTableBody');
+        var cards = element('mobileQueueList');
+        body.replaceChildren();
+        cards.replaceChildren();
+        state.items.forEach(function (item) {
+          body.appendChild(renderTableRow(item));
+          cards.appendChild(renderCard(item));
+        });
+      }
+      function currentRequest(cursor) {
+        var request = { scope: state.scope, cursor: cursor == null ? null : cursor };
+        if (state.scope === 'RANGE') {
+          request.startDate = state.startDate;
+          request.endDate = state.endDate;
+        }
+        return request;
+      }
+      function scopeLabel(scope) {
+        return { TODAY: 'วันนี้', FUTURE: 'วันถัดไป', RANGE: 'ช่วงวันที่', ALL: 'ทั้งหมด' }[scope] || scope;
+      }
+      function updateScopeUi() {
+        element('currentScopeLabel').textContent = scopeLabel(state.scope);
+        element('rangeControls').hidden = state.scope !== 'RANGE';
+        var buttons = doc.querySelectorAll('[data-scope]');
+        Array.prototype.forEach.call(buttons, function (button) { button.setAttribute('aria-pressed', String(button.dataset.scope === state.scope)); });
+      }
+
+      async function loadAdminPage(request) {
+        var next = request || {};
+        var append = next.cursor != null;
+        var nextScope = String(next.scope || state.scope || 'TODAY').toUpperCase();
+        var nextStartDate = next.startDate == null ? state.startDate : String(next.startDate);
+        var nextEndDate = next.endDate == null ? state.endDate : String(next.endDate);
+        var scopeChanged = !append && scopeRequestKey(nextScope, nextStartDate, nextEndDate) !== scopeRequestKey(state.scope, state.startDate, state.endDate);
+        state.scope = nextScope;
+        adminScope = state.scope;
+        state.startDate = nextStartDate;
+        state.endDate = nextEndDate;
+        updateScopeUi();
+        var payload = currentRequest(append ? next.cursor : null);
+        if (next.fresh) payload.fresh = true;
+        var requestId = ++state.requestSequence;
+        var generationSnapshot = itemGenerationSnapshot();
+        element('refreshAdminButton').disabled = true;
+        element('loadMoreButton').disabled = true;
+        if (!append) {
+          if (scopeChanged) {
+            state.items = [];
+            state.nextCursor = null;
+            renderItems();
+          }
+          setListState('loading', 'กำลังโหลดรายการ...', 'กรุณารอสักครู่');
+        }
+        try {
+          var data = responseData(await loadQueueData(payload), 'โหลดรายการไม่สำเร็จ');
+          if (requestId !== state.requestSequence) return;
+          state.items = reconcileListItems(data.items || [], generationSnapshot, append);
+          state.nextCursor = data.nextCursor || null;
+          renderItems();
+          if (state.items.length === 0) setListState('empty', 'ยังไม่มีรายการในช่วงนี้', 'เลือกช่วงเวลาอื่นหรือเพิ่มคิวใหม่ได้');
+          else hideListState();
+        } catch (error) {
+          if (requestId !== state.requestSequence) return;
+          renderItems();
+          setListState('error', 'โหลดรายการไม่สำเร็จ', errorText(error, 'โปรดลองรีเฟรชอีกครั้ง'));
+        } finally {
+          if (requestId === state.requestSequence) {
+            element('refreshAdminButton').disabled = false;
+            element('loadMoreButton').disabled = false;
+          }
+        }
+      }
+
+      function loadNextPage() {
+        return state.nextCursor ? loadAdminPage(Object.assign({}, currentRequest(state.nextCursor))) : Promise.resolve();
+      }
+      function refreshCurrentPage() { var request = currentRequest(null); request.fresh = true; return loadAdminPage(request); }
+      function setAdminScope(scope) {
+        var normalized = String(scope || '').toUpperCase();
+        if (['TODAY','FUTURE','RANGE','ALL'].indexOf(normalized) < 0) return Promise.resolve();
+        if (normalized === 'RANGE') {
+          var start = element('scopeStartDate').value;
+          var end = element('scopeEndDate').value;
+          if (!start || !end) {
+            element('rangeControls').hidden = false;
+            showToast('กรุณาเลือกวันที่เริ่มและวันที่สิ้นสุด', 'error');
+            return Promise.resolve();
+          }
+          return loadAdminPage({ scope: normalized, startDate: start, endDate: end, cursor: null });
+        }
+        return loadAdminPage({ scope: normalized, cursor: null });
+      }
+
+      function formatDisplayDate(value) {
+        var text = String(value == null ? '' : value).trim();
+        var match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+        if (!match) return text || '-';
+        var year = Number(match[1]);
+        if (year < 2400) year += 543;
+        return match[3] + '/' + match[2] + '/' + year;
+      }
+      function fieldValue(id) { return String(element(id).value == null ? '' : element(id).value).trim(); }
+      function selectedSurgeryTypes() {
+        var value = fieldValue('fieldNewSurgeryType');
+        return value ? [value] : [];
+      }
+      function buildPayload() {
+        var dateTime = fieldValue('fieldDateTime').split('T');
+        return {
+          date: dateTime[0] || '', time: (dateTime[1] || '').slice(0,5), hn: fieldValue('fieldHN'),
+          age: fieldValue('fieldAge') ? Number(fieldValue('fieldAge')) : '', gender: fieldValue('fieldGender'), wardOpd: fieldValue('fieldWardOpd'),
+          orRoom: fieldValue('fieldOrRoom'), diagnosis: fieldValue('fieldDiagnosis'), operation: fieldValue('fieldOperation'),
+          surgeon: fieldValue('fieldSurgeon'), anesthetist: fieldValue('fieldAnesthetist'), anesthesia: fieldValue('fieldAnesthesia'),
+          rights: fieldValue('fieldRights'), comment: fieldValue('fieldComment'), surgicalWound: fieldValue('fieldSurgicalWound'),
+          surgeryTypes: selectedSurgeryTypes(), checked: Boolean(element('fieldChecked').checked)
+        };
+      }
+      function setFormBusy(busy) {
+        state.submitting = busy;
+        element('submitButton').disabled = busy;
+        element('cancelEditButton').disabled = busy;
+      }
+      function clearFormFields() {
+        ['fieldDateTime','fieldHN','fieldAge','fieldGender','fieldWardOpd','fieldOrRoom','fieldDiagnosis','fieldOperation','fieldSurgeon','fieldAnesthetist','fieldAnesthesia','fieldRights','fieldComment','fieldNewSurgeryType'].forEach(function (id) { element(id).value = ''; });
+        element('fieldSurgicalWound').value = '';
+        element('fieldDateTime').value = formatDateTimeLocal(currentTime());
+        element('fieldChecked').checked = false;
+        setSurgerySelections([]);
+      }
+      function cancelEdit() {
+        state.formSession += 1;
+        clearFormFields();
+        element('editingId').value = '';
+        element('formTitle').textContent = 'เพิ่มคิวผ่าตัด';
+        element('submitButton').textContent = 'บันทึกคิว';
+        element('cancelEditButton').hidden = true;
+      }
+      async function handleFormSubmit(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        if (state.submitting) return;
+        var form = element('adminForm');
+        if (form.checkValidity && !form.checkValidity()) {
+          if (form.reportValidity) form.reportValidity();
+          return;
+        }
+        var payload = buildPayload();
+        var editingId = fieldValue('editingId');
+        if (editingId) payload.id = editingId;
+        var formSession = state.formSession;
+        if (editingId) {
+          if (state.mutations.has(editingId)) return;
+          state.mutations.add(editingId);
+          bumpItemGeneration(editingId);
+          renderItems();
+        }
+        setFormBusy(true);
+        try {
+          var response = await (editingId ? updateQueue(payload) : createQueue(payload));
+          var saved = responseData(response, 'บันทึกไม่สำเร็จ');
+          if (editingId) replaceLocalItem(saved);
+          if (isPendingResponse(response)) {
+            if (!editingId) state.items.unshift(saved);
+            renderItems();
+            hideListState();
+            showToast(pendingSyncMessage(), 'info');
+            if (state.formSession === formSession && fieldValue('editingId') === editingId) {
+              cancelEdit();
+              if (isNarrow()) switchAdminMobilePanel('list');
+            }
+            return;
+          }
+          showToast(editingId ? 'แก้ไขคิวแล้ว' : 'เพิ่มคิวแล้ว', 'success');
+          await refreshCurrentPage();
+          if (state.formSession === formSession && fieldValue('editingId') === editingId) {
+            cancelEdit();
+            if (isNarrow()) switchAdminMobilePanel('list');
+          }
+        } catch (error) {
+          showToast(errorText(error, 'บันทึกไม่สำเร็จ'), 'error');
+        } finally {
+          if (editingId) {
+            state.mutations.delete(editingId);
+            bumpItemGeneration(editingId);
+            renderItems();
+          }
+          setFormBusy(false);
+        }
+      }
+
+      function setSurgerySelections(values) {
+        element('fieldNewSurgeryType').value = values && values.length ? String(values[0]) : '';
+      }
+      function editQueue(id) {
+        var item = state.items.find(function (record) { return record.id === id; });
+        if (!item || state.mutations.has(id)) return;
+        state.formSession += 1;
+        element('editingId').value = item.id;
+        element('fieldDateTime').value = String(item.date || '') + 'T' + String(item.time || '');
+        ['HN','Age','Gender','WardOpd','OrRoom','Diagnosis','Operation','Surgeon','Anesthetist','Anesthesia','Rights','Comment','SurgicalWound'].forEach(function (suffix) {
+          var key = suffix.charAt(0).toLowerCase() + suffix.slice(1);
+          element('field' + suffix).value = item[key] == null ? '' : String(item[key]);
+        });
+        element('fieldHN').value = item.hn == null ? '' : String(item.hn);
+        element('fieldChecked').checked = Boolean(item.checked);
+        element('fieldNewSurgeryType').value = '';
+        setSurgerySelections(parseSurgeryTypes(item.surgeryTypes));
+        element('formTitle').textContent = 'แก้ไขคิวผ่าตัด';
+        element('submitButton').textContent = 'บันทึกการแก้ไข';
+        element('cancelEditButton').hidden = false;
+        if (isNarrow()) switchAdminMobilePanel('form');
+        element('fieldDateTime').focus();
+      }
+
+      async function removeQueue(id) {
+        var item = state.items.find(function (record) { return record.id === id; });
+        if (!item || state.mutations.has(id)) return;
+        if (!askConfirm('ยืนยันลบคิว ' + String(item.hn || '') + ' ?')) return;
+        state.mutations.add(id);
+        bumpItemGeneration(id);
+        renderItems();
+        try {
+          var response = await deleteQueue({ id: id });
+          responseData(response, 'ลบคิวไม่สำเร็จ');
+          state.deletedIds.add(id);
+          state.items = state.items.filter(function (record) { return record.id !== id; });
+          showToast(isPendingResponse(response) ? pendingSyncMessage() : 'ลบคิวแล้ว', isPendingResponse(response) ? 'info' : 'success');
+          renderItems();
+          if (state.items.length === 0) setListState('empty', 'ยังไม่มีรายการในช่วงนี้', 'เลือกช่วงเวลาอื่นหรือเพิ่มคิวใหม่ได้');
+        } catch (error) {
+          showToast(errorText(error, 'ลบคิวไม่สำเร็จ'), 'error');
+        } finally {
+          state.mutations.delete(id);
+          bumpItemGeneration(id);
+          renderItems();
+        }
+      }
+
+      async function changeQueueStatus(id, checked, sourceCheckbox) {
+        var item = state.items.find(function (record) { return record.id === id; });
+        if (!item || state.mutations.has(id)) return;
+        var previous = Boolean(item.checked);
+        item.checked = Boolean(checked);
+        state.mutations.add(id);
+        bumpItemGeneration(id);
+        if (sourceCheckbox) sourceCheckbox.disabled = true;
+        renderItems();
+        try {
+          var response = await setQueueStatus({ id: id, checked: Boolean(checked) });
+          var saved = responseData(response, 'เปลี่ยนสถานะไม่สำเร็จ');
+          replaceLocalItem(saved);
+          showToast(isPendingResponse(response) ? pendingSyncMessage() : 'อัปเดตสถานะแล้ว', isPendingResponse(response) ? 'info' : 'success');
+        } catch (error) {
+          item.checked = previous;
+          if (sourceCheckbox) sourceCheckbox.checked = previous;
+          showToast(errorText(error, 'เปลี่ยนสถานะไม่สำเร็จ'), 'error');
+        } finally {
+          state.mutations.delete(id);
+          bumpItemGeneration(id);
+          if (sourceCheckbox) sourceCheckbox.disabled = false;
+          renderItems();
+        }
+      }
+
+      function populateSimpleOptions(id, values) {
+        var holder = element(id);
+        holder.replaceChildren();
+        (values || []).forEach(function (value) {
+          var option = createNode('option');
+          option.value = String(value);
+          holder.appendChild(option);
+        });
+      }
+      function populateSurgeryTypes(values) {
+        var holder = element('surgeryTypeOptions');
+        holder.replaceChildren();
+        (values || []).forEach(function (value) {
+          var option = createNode('option');
+          option.value = String(value);
+          holder.appendChild(option);
+        });
+        state.optionsReady = true;
+      }
+      async function loadFormOptions() {
+        try {
+          var data = responseData(await loadOptionsData(), 'โหลดตัวเลือกไม่สำเร็จ');
+          populateSimpleOptions('diagnosisOptions', data.diagnosis);
+          populateSimpleOptions('operationOptions', data.operation);
+          populateSimpleOptions('surgeonOptions', data.surgeon);
+          populateSimpleOptions('anesthetistOptions', data.anesthetist);
+          populateSimpleOptions('rightsOptions', data.rights);
+          populateSurgeryTypes(data.surgeryType);
+        } catch (error) {
+          populateSurgeryTypes([]);
+          showToast(errorText(error, 'โหลดตัวเลือกไม่สำเร็จ'), 'error');
+        }
+      }
+
+      async function loadFrequentWords() {
+        setFrequentWordsState('loading', 'กำลังโหลดคำที่ใช้บ่อย...', 'กรุณารอสักครู่');
+        try {
+          var data = responseData(await loadFrequentWordsData(), 'โหลดคำที่ใช้บ่อยไม่สำเร็จ');
+          state.frequentWords = Array.isArray(data.items) ? data.items.slice() : [];
+          renderFrequentWords();
+        } catch (error) {
+          element('frequentWordsTableBody').replaceChildren();
+          element('frequentWordsCardList').replaceChildren();
+          setFrequentWordsState('error', 'โหลดคำที่ใช้บ่อยไม่สำเร็จ', errorText(error, 'โปรดลองใหม่อีกครั้ง'));
+        }
+      }
+      function setFrequentWordsBusy(busy) {
+        state.frequentWordsSubmitting = busy;
+        element('frequentWordsGroup').disabled = busy || Boolean(state.frequentWordsEditing);
+        element('frequentWordsValue').disabled = busy;
+        element('frequentWordsSubmitButton').disabled = busy;
+        element('frequentWordsCancelButton').disabled = busy;
+      }
+      function resetFrequentWordsForm() {
+        var selectedGroup = state.frequentWordsFilter || 'diagnosis';
+        state.frequentWordsEditing = null;
+        element('frequentWordsGroup').disabled = false;
+        element('frequentWordsGroup').value = selectedGroup;
+        element('frequentWordsCurrentGroup').textContent = frequentWordLabel(selectedGroup);
+        element('frequentWordsValue').value = '';
+        element('frequentWordsSubmitButton').textContent = 'เพิ่มคำ';
+        element('frequentWordsCancelButton').hidden = true;
+      }
+      async function handleFrequentWordsSubmit(event) {
+        if (event && event.preventDefault) event.preventDefault();
+        if (state.frequentWordsSubmitting) return;
+        var form = element('frequentWordsForm');
+        if (form.checkValidity && !form.checkValidity()) {
+          if (form.reportValidity) form.reportValidity();
+          return;
+        }
+        var value = fieldValue('frequentWordsValue');
+        var editing = state.frequentWordsEditing;
+        var type = editing ? editing.type : fieldValue('frequentWordsGroup');
+        if (!type || !value) {
+          showToast('กรุณาเลือกกลุ่มและกรอกคำ', 'error');
+          return;
+        }
+        setFrequentWordsBusy(true);
+        try {
+          var payload = editing
+            ? { type: editing.type, normalizedKey: editing.normalizedKey, value: value }
+            : { type: type, value: value };
+          var response = await (editing ? updateFrequentWord(payload) : createFrequentWord(payload));
+          var result = responseData(response, 'บันทึกคำไม่สำเร็จ');
+          if (isPendingResponse(response)) {
+            var savedItem = localFrequentWordItem(payload, result.item || result, editing, true);
+            upsertLocalFrequentWord(savedItem, editing);
+            syncLocalDatalistOption(savedItem.type, editing && editing.value, savedItem.value, false);
+            renderFrequentWords();
+            showToast(pendingSyncMessage(), 'info');
+            resetFrequentWordsForm();
+            return;
+          }
+          await loadFrequentWords();
+          await loadFormOptions();
+          var affectedQueueRows = result.affectedQueueRows == null ? 0 : result.affectedQueueRows;
+          showToast((editing ? 'แก้ไขคำแล้ว' : 'เพิ่มคำแล้ว') + ' · sync คิว ' + affectedQueueRows + ' row', 'success');
+          resetFrequentWordsForm();
+        } catch (error) {
+          showToast(errorText(error, 'บันทึกคำไม่สำเร็จ'), 'error');
+        } finally {
+          setFrequentWordsBusy(false);
+        }
+      }
+      function editFrequentWord(item) {
+        if (!item || !item.type || !item.normalizedKey || state.frequentWordsSubmitting) return;
+        state.frequentWordsEditing = Object.assign({}, item);
+        setFrequentWordsGroup(item.type);
+        element('frequentWordsGroup').disabled = true;
+        element('frequentWordsValue').value = item.value || '';
+        element('frequentWordsSubmitButton').textContent = 'บันทึกการแก้ไข';
+        element('frequentWordsCancelButton').hidden = false;
+        renderFrequentWords();
+        if (isNarrow()) switchAdminMobilePanel('frequentWords');
+        element('frequentWordsValue').focus();
+      }
+      function cancelFrequentWordEdit() {
+        resetFrequentWordsForm();
+        renderFrequentWords();
+      }
+      async function removeFrequentWord(item) {
+        if (!item || !item.type || !item.normalizedKey || state.frequentWordsSubmitting) return;
+        if (!askConfirm('ยืนยันลบคำ "' + String(item.value || '') + '" ทั้ง row หรือไม่?')) return;
+        var mutationKey = frequentWordKey(item);
+        if (state.frequentWordsMutations.has(mutationKey)) return;
+        state.frequentWordsMutations.add(mutationKey);
+        renderFrequentWords();
+        try {
+          var response = await deleteFrequentWord({ type: item.type, normalizedKey: item.normalizedKey });
+          var result = responseData(response, 'ลบคำไม่สำเร็จ');
+          if (isPendingResponse(response)) {
+            state.frequentWords = state.frequentWords.filter(function (record) { return frequentWordKey(record) !== mutationKey; });
+            syncLocalDatalistOption(item.type, item.value, '', true);
+            if (state.frequentWordsEditing && frequentWordKey(state.frequentWordsEditing) === mutationKey) resetFrequentWordsForm();
+            renderFrequentWords();
+            showToast(pendingSyncMessage(), 'info');
+            return;
+          }
+          await loadFrequentWords();
+          await loadFormOptions();
+          if (state.frequentWordsEditing && frequentWordKey(state.frequentWordsEditing) === mutationKey) resetFrequentWordsForm();
+          var affectedQueueRows = result.affectedQueueRows == null ? 0 : result.affectedQueueRows;
+          showToast('ลบคำแล้ว · ลบตัวเลือก ' + (result.affectedOptionRows || 0) + ' row · sync คิว ' + affectedQueueRows + ' row', 'success');
+        } catch (error) {
+          showToast(errorText(error, 'ลบคำไม่สำเร็จ'), 'error');
+        } finally {
+          state.frequentWordsMutations.delete(mutationKey);
+          renderFrequentWords();
+        }
+      }
+
+      function buildExportRequest() {
+        var mode = fieldValue('exportMode') || 'MONTH';
+        if (mode === 'ALL') return { scope: 'ALL' };
+        if (mode === 'YEAR') {
+          var year = fieldValue('exportYear');
+          if (!/^\d{4}$/.test(year)) throw new Error('กรุณาระบุปี ค.ศ.');
+          return { scope: 'RANGE', startDate: year + '-01-01', endDate: year + '-12-31' };
+        }
+        var month = fieldValue('exportMonth');
+        if (!/^\d{4}-\d{2}$/.test(month)) throw new Error('กรุณาเลือกเดือน');
+        var parts = month.split('-');
+        var lastDay = new Date(Number(parts[0]), Number(parts[1]), 0).getDate();
+        return { scope: 'RANGE', startDate: month + '-01', endDate: month + '-' + String(lastDay).padStart(2, '0') };
+      }
+      async function collectAllExportRows(request) {
+        var rows = [];
+        var headers = [];
+        var cursor = null;
+        do {
+          var data = responseData(await exportQueues(Object.assign({}, request, { cursor: cursor })), 'Export ไม่สำเร็จ');
+          if (!headers.length) headers = (data.headers || []).slice();
+          rows = rows.concat(data.items || []);
+          cursor = data.nextCursor || null;
+        } while (cursor);
+        return { headers: headers, rows: rows };
+      }
+      function sanitizeCsvCell(value) {
+        var text = String(value == null ? '' : value);
+        if (/^[=+\-@\t\r]/.test(text)) text = "'" + text;
+        var escaped = text.replace(/"/g, '""');
+        return /[,"\r\n]/.test(text) ? '"' + escaped + '"' : escaped;
+      }
+      function createCsv(headers, rows) {
+        var lines = [headers.map(sanitizeCsvCell).join(',')];
+        rows.forEach(function (row) { lines.push(headers.map(function (header) { return sanitizeCsvCell(row[header]); }).join(',')); });
+        return '\uFEFF' + lines.join('\r\n');
+      }
+      function downloadCsvInBrowser(filename, content) {
+        var blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var link = doc.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.hidden = true;
+        doc.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+      async function handleExportClick() {
+        var button = element('exportButton');
+        button.disabled = true;
+        try {
+          var request = buildExportRequest();
+          var result = await collectAllExportRows(request);
+          downloadCsv('or-queues-' + new Date().toISOString().slice(0,10) + '.csv', createCsv(result.headers, result.rows));
+          showToast('ส่งออก ' + result.rows.length + ' รายการแล้ว', 'success');
+        } catch (error) {
+          showToast(errorText(error, 'Export ไม่สำเร็จ'), 'error');
+        } finally { button.disabled = false; }
+      }
+
+      function switchAdminMobilePanel(panel) {
+        var selected = ['list', 'frequentWords'].indexOf(panel) >= 0 ? panel : 'form';
+        var panels = {
+          form: element('panelForm'), list: element('panelList'), frequentWords: element('panelFrequentWords')
+        };
+        var tabs = {
+          form: element('tabForm'), list: element('tabList'), frequentWords: element('tabFrequentWords')
+        };
+        Object.keys(panels).forEach(function (name) {
+          panels[name].dataset.mobileActive = String(name === selected);
+          tabs[name].setAttribute('aria-selected', String(name === selected));
+        });
+        panels[selected].focus();
+      }
+      function formatDateTimeLocal(date) {
+        var pad = function (value) { return String(value).padStart(2, '0'); };
+        return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + 'T' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+      }
+      function updateClock() {
+        var now = currentTime();
+        element('currentDateStr').textContent = new Intl.DateTimeFormat('th-TH-u-ca-buddhist', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(now);
+        element('currentTimeStr').textContent = [now.getHours(), now.getMinutes(), now.getSeconds()].map(function (part) { return String(part).padStart(2, '0'); }).join(':');
+      }
+      function updateExportControls() {
+        var mode = fieldValue('exportMode');
+        element('exportMonth').hidden = mode !== 'MONTH';
+        element('exportYear').hidden = mode !== 'YEAR';
+      }
+      function bindEvents() {
+        element('adminForm').addEventListener('submit', handleFormSubmit);
+        element('cancelEditButton').addEventListener('click', cancelEdit);
+        element('frequentWordsForm').addEventListener('submit', handleFrequentWordsSubmit);
+        element('frequentWordsCancelButton').addEventListener('click', cancelFrequentWordEdit);
+        element('frequentWordsGroup').addEventListener('change', function () { setFrequentWordsGroup(element('frequentWordsGroup').value); });
+        element('refreshAdminButton').addEventListener('click', refreshCurrentPage);
+        element('loadMoreButton').addEventListener('click', loadNextPage);
+        element('applyRangeButton').addEventListener('click', function () { setAdminScope('RANGE'); });
+        element('exportButton').addEventListener('click', handleExportClick);
+        element('exportMode').addEventListener('change', updateExportControls);
+        Array.prototype.forEach.call(doc.querySelectorAll('[data-scope]'), function (button) {
+          button.addEventListener('click', function () {
+            if (button.dataset.scope === 'RANGE') {
+              state.scope = 'RANGE';
+              updateScopeUi();
+            } else setAdminScope(button.dataset.scope);
+          });
+        });
+        Array.prototype.forEach.call(doc.querySelectorAll('[data-admin-tab]'), function (button) {
+          button.addEventListener('click', function () { switchAdminMobilePanel(button.dataset.adminTab); });
+        });
+      }
+      async function initialize() {
+        bindEvents();
+        updateClock();
+        updateExportControls();
+        var now = currentTime();
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        if (!element('exportMonth').value) element('exportMonth').value = now.getFullYear() + '-' + month;
+        if (!element('exportYear').value) element('exportYear').value = String(now.getFullYear());
+        if (!element('fieldDateTime').value) element('fieldDateTime').value = formatDateTimeLocal(now);
+        if (state.clockTimer !== null) cancelInterval(state.clockTimer);
+        state.clockTimer = scheduleInterval(updateClock, 1000);
+        await Promise.all([loadFormOptions(), loadFrequentWords(), loadAdminPage({ scope: 'TODAY', cursor: null })]);
+      }
+
+      return {
+        initialize: initialize,
+        loadAdminPage: loadAdminPage,
+        loadNextPage: loadNextPage,
+        refreshCurrentPage: refreshCurrentPage,
+        setAdminScope: setAdminScope,
+        handleFormSubmit: handleFormSubmit,
+        editQueue: editQueue,
+        cancelEdit: cancelEdit,
+        removeQueue: removeQueue,
+        changeQueueStatus: changeQueueStatus,
+        handleExportClick: handleExportClick,
+        loadFrequentWords: loadFrequentWords,
+        setFrequentWordsGroup: setFrequentWordsGroup,
+        handleFrequentWordsSubmit: handleFrequentWordsSubmit,
+        editFrequentWord: editFrequentWord,
+        cancelFrequentWordEdit: cancelFrequentWordEdit,
+        removeFrequentWord: removeFrequentWord,
+        switchAdminMobilePanel: switchAdminMobilePanel
+      };
+    }
+
+    var adminController = null;
+    function switchAdminMobilePanel(panel) { return adminController && adminController.switchAdminMobilePanel(panel); }
+    function loadAdminPage(request) { return adminController && adminController.loadAdminPage(request); }
+    function handleFormSubmit(event) { return adminController && adminController.handleFormSubmit(event); }
+    function editQueue(id) { return adminController && adminController.editQueue(id); }
+    function removeQueue(id) { return adminController && adminController.removeQueue(id); }
+    function handleExportClick() { return adminController && adminController.handleExportClick(); }
+    function loadFrequentWords() { return adminController && adminController.loadFrequentWords(); }
+    function handleFrequentWordsSubmit(event) { return adminController && adminController.handleFrequentWordsSubmit(event); }
+    function editFrequentWord(item) { return adminController && adminController.editFrequentWord(item); }
+    function removeFrequentWord(item) { return adminController && adminController.removeFrequentWord(item); }
+
+    function initializeAdmin() {
+      var ready = globalThis.OR_PWA_READY || Promise.resolve();
+      Promise.resolve(ready).then(function () {
+        adminController = createAdminController({ document: document });
+        return adminController.initialize();
+      });
+    }
+
+    var adminTestApi = { createAdminController: createAdminController };
+    globalThis.OR_ADMIN_TEST_API = adminTestApi;
+    globalThis.switchAdminMobilePanel = switchAdminMobilePanel;
+    globalThis.loadAdminPage = loadAdminPage;
+    globalThis.handleFormSubmit = handleFormSubmit;
+    globalThis.editQueue = editQueue;
+    globalThis.removeQueue = removeQueue;
+    globalThis.handleExportClick = handleExportClick;
+    globalThis.loadFrequentWords = loadFrequentWords;
+    globalThis.handleFrequentWordsSubmit = handleFrequentWordsSubmit;
+    globalThis.editFrequentWord = editFrequentWord;
+    globalThis.removeFrequentWord = removeFrequentWord;
+
+    if (typeof document !== 'undefined') {
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initializeAdmin);
+      else initializeAdmin();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OR Dashboard — Icon Design Preview</title>
+  <style>
+    :root {
+      --navy: #062566;
+      --blue: #0b3b9d;
+      --cyan: #26d5ec;
+      --teal: #0f8b6d;
+      --amber: #a85e06;
+      --ink: #10213d;
+      --muted: #64748b;
+      --line: #dbe6f4;
+      --paper: #f4f8fd;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: linear-gradient(145deg, #eaf2ff, #f9fbfe 48%, #e6f4f3);
+      color: var(--ink);
+      font-family: Sarabun, "Noto Sans Thai", "Segoe UI", sans-serif;
+    }
+    main { max-width: 1160px; margin: 0 auto; padding: 34px 22px 48px; }
+    header { margin-bottom: 24px; }
+    h1 { margin: 0; color: var(--navy); font-size: clamp(25px, 4vw, 42px); line-height: 1.1; }
+    header p { margin: 8px 0 0; color: var(--muted); font-size: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 18px; }
+    .option {
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(6, 37, 102, .1);
+    }
+    .option h2 { margin: 0; color: var(--navy); font-size: 22px; }
+    .option > p { min-height: 44px; margin: 5px 0 16px; color: var(--muted); line-height: 1.45; }
+    .icons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .icon-card {
+      min-height: 180px;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 8px;
+      border-radius: 15px;
+      background: var(--paper);
+      border: 1px solid #e3ebf5;
+    }
+    .icon-card svg { width: 122px; height: 122px; display: block; }
+    .icon-card b { color: var(--navy); font-size: 15px; }
+    .meta { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { padding: 4px 9px; border-radius: 99px; background: #edf3ff; color: var(--blue); font-size: 12px; font-weight: 700; }
+    .tag.teal { background: #e5f7f0; color: var(--teal); }
+    .tag.amber { background: #fff4d8; color: var(--amber); }
+    .tag.slate { background: #eef2f7; color: #475569; }
+    footer { margin-top: 24px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 460px) {
+      main { padding: 24px 12px 36px; }
+      .option { padding: 15px; }
+      .icon-card { min-height: 160px; }
+      .icon-card svg { width: 104px; height: 104px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>ไอคอน OR Dashboard / Admin</h1>
+      <p>ตัวอย่าง Typography แบบวงกลม 5 แนวทาง — แต่ละแบบแยกหน้าแดชบอร์ดและหน้าจัดการให้เห็นชัด</p>
+    </header>
+
+    <section class="grid" aria-label="ตัวเลือกไอคอน">
+      <article class="option">
+        <h2>แบบที่ 1 · OR Pulse</h2>
+        <p>ใช้คำว่า OR เป็นแกนหลัก สื่อการไหลของคิวด้วยเส้นชีพจร เหมาะกับหน้าภาพรวมที่ต้องดูเร็ว</p>
+        <div class="icons">
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Dashboard OR Pulse">
+              <circle cx="80" cy="80" r="70" fill="#062566"/>
+              <circle cx="80" cy="80" r="59" fill="#0b3b9d" stroke="#26d5ec" stroke-width="3"/>
+              <path d="M22 88h26l8-18 12 39 12-55 13 38 9-18h30" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text data-role="main-mark" data-layout="upper-mark" x="79" y="60" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="31" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="127" text-anchor="middle" dominant-baseline="middle" fill="#b7f8ff" font-size="12" font-weight="800" font-family="Sarabun, sans-serif">DASHBOARD</text>
+            </svg>
+            <b>แดชบอร์ด</b>
+          </div>
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Admin OR Pulse">
+              <circle cx="80" cy="80" r="70" fill="#062566"/>
+              <circle cx="80" cy="80" r="59" fill="#0b3b9d" stroke="#f3b23c" stroke-width="3"/>
+              <path d="M39 48h82M39 80h82M39 112h82" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="62" cy="48" r="6" fill="#f3b23c"/><circle cx="96" cy="80" r="6" fill="#f3b23c"/><circle cx="74" cy="112" r="6" fill="#f3b23c"/>
+              <text data-role="main-mark" data-layout="upper-mark" x="79" y="61" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="31" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="127" text-anchor="middle" dominant-baseline="middle" fill="#ffe2a2" font-size="12" font-weight="800" font-family="Sarabun, sans-serif">ADMIN</text>
+            </svg>
+            <b>จัดการ</b>
+          </div>
+        </div>
+        <div class="meta"><span class="tag">OR เด่น</span><span class="tag teal">คิวไหล</span><span class="tag amber">ตั้งค่า</span></div>
+      </article>
+
+      <article class="option">
+        <h2>แบบที่ 2 · ORQ Queue</h2>
+        <p>ตัวอักษร ORQ คู่กับจุดคิวที่เรียงลำดับ ส่วน Admin ใช้บรรทัดข้อมูล สื่อรายการและการแก้ไข</p>
+        <div class="icons">
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Dashboard OR Queue">
+              <circle cx="80" cy="80" r="70" fill="#fff" stroke="#0b3b9d" stroke-width="12"/>
+              <circle cx="80" cy="80" r="54" fill="#eaf2ff"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="87.5" text-anchor="middle" dominant-baseline="middle" fill="#062566" font-size="52" font-weight="900" letter-spacing="-4" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <circle cx="34" cy="40" r="7" fill="#0f8b6d"/><circle cx="51" cy="40" r="7" fill="#26d5ec"/><circle cx="68" cy="40" r="7" fill="#0b3b9d"/>
+              <text x="80" y="125" text-anchor="middle" dominant-baseline="middle" fill="#0f8b6d" font-size="12" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">ORQ</text>
+            </svg>
+            <b>แดชบอร์ด</b>
+          </div>
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Admin OR Queue">
+              <circle cx="80" cy="80" r="70" fill="#fff" stroke="#0f8b6d" stroke-width="12"/>
+              <circle cx="80" cy="80" r="54" fill="#e5f7f0"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="87.5" text-anchor="middle" dominant-baseline="middle" fill="#063c42" font-size="52" font-weight="900" letter-spacing="-4" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <path d="M30 39h18M30 53h18M30 67h18" stroke="#a85e06" stroke-width="5" stroke-linecap="round"/>
+              <path d="M118 42l6 6 12-14" fill="none" stroke="#0f8b6d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="80" y="125" text-anchor="middle" dominant-baseline="middle" fill="#0f8b6d" font-size="12" font-weight="800" font-family="Sarabun, sans-serif">EDIT</text>
+            </svg>
+            <b>จัดการ</b>
+          </div>
+        </div>
+        <div class="meta"><span class="tag teal">คิว/รายการ</span><span class="tag">อ่านง่าย</span><span class="tag amber">แก้ไขได้</span></div>
+      </article>
+
+      <article class="option">
+        <h2>แบบที่ 3 · OR Monogram</h2>
+        <p>มินิมอลที่สุด ใช้ OR เป็น monogram และแยกหน้าด้วยตัวอักษร D/A ที่อ่านได้แม้ไอคอนเล็ก</p>
+        <div class="icons">
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Dashboard OR Monogram">
+              <circle cx="80" cy="80" r="70" fill="#062566"/>
+              <circle cx="80" cy="80" r="59" fill="none" stroke="#26d5ec" stroke-width="2"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="87.5" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="55" font-weight="900" letter-spacing="-6" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <path d="M49 116h62" stroke="#26d5ec" stroke-width="4" stroke-linecap="round"/>
+              <text x="80" y="126" text-anchor="middle" dominant-baseline="middle" fill="#b7f8ff" font-size="13" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">D</text>
+            </svg>
+            <b>แดชบอร์ด</b>
+          </div>
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Admin OR Monogram">
+              <circle cx="80" cy="80" r="70" fill="#fff" stroke="#062566" stroke-width="7"/>
+              <circle cx="80" cy="80" r="60" fill="none" stroke="#a85e06" stroke-width="2" stroke-dasharray="5 5"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="87.5" text-anchor="middle" dominant-baseline="middle" fill="#062566" font-size="55" font-weight="900" letter-spacing="-6" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <path d="M49 116h62" stroke="#a85e06" stroke-width="4" stroke-linecap="round"/>
+              <text x="80" y="126" text-anchor="middle" dominant-baseline="middle" fill="#a85e06" font-size="13" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">A</text>
+            </svg>
+            <b>จัดการ</b>
+          </div>
+        </div>
+        <div class="meta"><span class="tag">เล็กชัด</span><span class="tag slate">เรียบ</span><span class="tag amber">D / A</span></div>
+      </article>
+
+      <article class="option">
+        <h2>แบบที่ 4 · OR Care</h2>
+        <p>ใส่สัญลักษณ์กากบาททางการแพทย์แบบพอดี ไม่ใช้โลโก้โรงพยาบาลโดยตรง จึงแยกแบรนด์ได้ชัด</p>
+        <div class="icons">
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Dashboard OR Care">
+              <circle cx="80" cy="80" r="70" fill="#0b3b9d"/>
+              <circle cx="80" cy="80" r="58" fill="#fff"/>
+              <path d="M71 28h18v16h16v18H89v16H71V62H55V44h16z" fill="#26d5ec"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="86.5" text-anchor="middle" dominant-baseline="middle" fill="#062566" font-size="50" font-weight="900" letter-spacing="-5" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="130" text-anchor="middle" dominant-baseline="middle" fill="#0b3b9d" font-size="10" font-weight="900" font-family="Sarabun, sans-serif">ภาพรวม</text>
+            </svg>
+            <b>แดชบอร์ด</b>
+          </div>
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Admin OR Care">
+              <circle cx="80" cy="80" r="70" fill="#0f8b6d"/>
+              <circle cx="80" cy="80" r="58" fill="#fff"/>
+              <path d="M71 28h18v16h16v18H89v16H71V62H55V44h16z" fill="#a85e06"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="86.5" text-anchor="middle" dominant-baseline="middle" fill="#063c42" font-size="50" font-weight="900" letter-spacing="-5" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="130" text-anchor="middle" dominant-baseline="middle" fill="#0f8b6d" font-size="10" font-weight="900" font-family="Sarabun, sans-serif">จัดการ</text>
+            </svg>
+            <b>จัดการ</b>
+          </div>
+        </div>
+        <div class="meta"><span class="tag teal">สุขภาพ</span><span class="tag">เป็นมิตร</span><span class="tag amber">ไม่ใช้โลโก้จริง</span></div>
+      </article>
+
+      <article class="option">
+        <h2>แบบที่ 5 · OR Ring</h2>
+        <p>วงแหวนข้อมูลแบบ dashboard ใช้สีแบ่งบทบาท: ฟ้า = ดูภาพรวม, เขียว = จัดการ, อ่านง่ายบนพื้นขาว</p>
+        <div class="icons">
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Dashboard OR Ring">
+              <circle cx="80" cy="80" r="69" fill="#f8fbff" stroke="#dbe6f4" stroke-width="2"/>
+              <circle cx="80" cy="80" r="57" fill="none" stroke="#0b3b9d" stroke-width="13" stroke-dasharray="250 108" transform="rotate(-82 80 80)"/>
+              <circle cx="80" cy="80" r="57" fill="none" stroke="#26d5ec" stroke-width="13" stroke-dasharray="74 284" transform="rotate(70 80 80)"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="86.5" text-anchor="middle" dominant-baseline="middle" fill="#062566" font-size="50" font-weight="900" letter-spacing="-5" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="125" text-anchor="middle" dominant-baseline="middle" fill="#0b3b9d" font-size="12" font-weight="900" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">ORQ</text>
+            </svg>
+            <b>แดชบอร์ด</b>
+          </div>
+          <div class="icon-card">
+            <svg viewBox="0 0 160 160" role="img" aria-label="Admin OR Ring">
+              <circle cx="80" cy="80" r="69" fill="#fbfffd" stroke="#dbe6f4" stroke-width="2"/>
+              <circle cx="80" cy="80" r="57" fill="none" stroke="#0f8b6d" stroke-width="13" stroke-dasharray="250 108" transform="rotate(-82 80 80)"/>
+              <circle cx="80" cy="80" r="57" fill="none" stroke="#f3b23c" stroke-width="13" stroke-dasharray="74 284" transform="rotate(70 80 80)"/>
+              <text data-role="main-mark" data-layout="circle-center" x="77" y="86.5" text-anchor="middle" dominant-baseline="middle" fill="#063c42" font-size="50" font-weight="900" letter-spacing="-5" font-family="Arial Black, Segoe UI Black, Segoe UI, sans-serif">OR</text>
+              <text x="80" y="125" text-anchor="middle" dominant-baseline="middle" fill="#0f8b6d" font-size="12" font-weight="900" font-family="Sarabun, sans-serif">แก้ไข</text>
+            </svg>
+            <b>จัดการ</b>
+          </div>
+        </div>
+        <div class="meta"><span class="tag teal">ข้อมูล</span><span class="tag">เป็นระบบ</span><span class="tag amber">สองโหมด</span></div>
+      </article>
+    </section>
+
+    <footer>หมายเหตุ: ตัวอย่างนี้เป็น mockup สำหรับเลือกทิศทางเท่านั้น หลังเลือกแล้วผมจะทำไฟล์ SVG ต้นฉบับและเรนเดอร์ PNG/ICO ให้ตรวจขนาดจริงอีกครั้ง</footer>
+  </main>
+</body>
+</html>
