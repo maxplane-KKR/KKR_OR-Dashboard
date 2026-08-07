@@ -1,6 +1,6 @@
 'use strict';
 
-var CACHE_NAME = 'orq-pwa-v2';
+var CACHE_NAME = 'orq-pwa-v3';
 var APP_SHELL = [
   'Index.html',
   'Admin.html',
