@@ -3,7 +3,7 @@
   "short_name": "OR Admin",
   "id": "/Admin.html",
   "start_url": "/Admin.html?page=admin",
-  "scope": "/",
+  "scope": "/Admin.html",
   "display": "standalone",
   "background_color": "#f1f5f9",
   "theme_color": "#0B3B9D",
