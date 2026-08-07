@@ -1,10 +1,11 @@
 'use strict';
 
-var CACHE_NAME = 'orq-pwa-v3';
+var CACHE_NAME = 'orq-pwa-v4';
 var APP_SHELL = [
   'Index.html',
   'Admin.html',
   'manifest.webmanifest',
+  'admin-manifest.webmanifest',
   'offline.html',
   'pwa/runtime.js',
   'pwa/api-client.js',
