@@ -44,6 +44,24 @@ test('HTML ทั้งสองหน้าผูก manifest และ runtime
   }
 });
 
+test('HTML แต่ละหน้าประกาศ icon สำหรับการสร้างทางลัดบน Android', () => {
+  const pageIcons = {
+    'Index.html': 'Icon/orq-dashboard.png',
+    'Admin.html': 'Icon/orq-admin.png',
+  };
+
+  for (const [page, icon] of Object.entries(pageIcons)) {
+    const html = read(page);
+    assert.match(html, new RegExp(`rel=["']icon["'][^>]+href=["']${icon.replace('/', '\\/')}["']`, 'i'));
+    assert.match(html, new RegExp(`rel=["']apple-touch-icon["'][^>]+href=["']${icon.replace('/', '\\/')}["']`, 'i'));
+  }
+});
+
+test('manifest shortcut icon รองรับ Android maskable', () => {
+  const manifest = JSON.parse(read('manifest.webmanifest'));
+  assert.match(manifest.shortcuts[0].icons[0].purpose, /maskable/);
+});
+
 test('runtime cache-busts dynamically loaded PWA scripts', () => {
   const runtime = read(path.join('pwa', 'runtime.js'));
   assert.match(runtime, /PWA_ASSET_VERSION/);
