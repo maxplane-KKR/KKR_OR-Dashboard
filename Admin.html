@@ -978,7 +978,7 @@
         return loadSnapshot(key, function () { return listQueues(request); });
       }
       function loadOptionsData() {
-        return loadSnapshot('admin:options', function () { return getOptions('surgeryType'); });
+        return loadSnapshot('admin:options', function () { return getOptions(); });
       }
       function loadFrequentWordsData() {
         return loadSnapshot('admin:frequentWords', function () { return getFrequentWords(); });
