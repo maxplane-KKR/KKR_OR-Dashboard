@@ -84,6 +84,25 @@ test('online read falls back to network when IndexedDB is unavailable', async ()
   assert.equal(result.meta.storageUnavailable, true);
 });
 
+test('online read returns network data when snapshot persistence fails', async () => {
+  const createOrSyncManager = loadSync();
+  const store = createStore();
+  store.putSnapshot = async () => {
+    throw Object.assign(new Error('IndexedDB write unavailable'), { code: 'STORAGE_OPERATION_FAILED' });
+  };
+  const manager = createOrSyncManager({ store, online: () => true });
+
+  const result = await manager.loadSnapshot('dashboard:today', async () => ({
+    ok: true,
+    data: { items: [{ id: 'q2' }] },
+    meta: { source: 'network' },
+  }));
+
+  assert.deepEqual(result.data, { items: [{ id: 'q2' }] });
+  assert.equal(result.meta.cached, false);
+  assert.equal(result.meta.storageUnavailable, true);
+});
+
 test('offline mutation ลง outbox และยังไม่เรียก API', async () => {
   const createOrSyncManager = loadSync();
   const store = createStore();
