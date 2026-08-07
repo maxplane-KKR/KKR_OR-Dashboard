@@ -14,7 +14,7 @@ test('PWA static host keeps the API same-origin and out of the service-worker ca
   const serviceWorker = read('sw.js');
 
   assert.equal(manifest.start_url, '/Index.html');
-  assert.equal(manifest.scope, '/');
+  assert.equal(manifest.scope, '/Index.html');
   assert.match(client, /apiBase \|\| '\/api'/);
   assert.match(client, /method: 'POST'/);
   assert.match(serviceWorker, /\/api/);
