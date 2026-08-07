@@ -57,3 +57,11 @@ test('service worker มี cache version, navigation fallback และไม�
   assert.match(source, /request\.url.*\/api|url\.pathname.*\/api/s);
   assert.match(source, /respondWith/);
 });
+
+test('Vercel routes the root and lowercase index URL to the dashboard shell', () => {
+  const config = JSON.parse(read('vercel.json'));
+  assert.deepEqual(config.rewrites, [
+    { source: '/', destination: '/Index.html' },
+    { source: '/index.html', destination: '/Index.html' },
+  ]);
+});
