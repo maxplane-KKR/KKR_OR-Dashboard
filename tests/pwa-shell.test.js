@@ -17,7 +17,7 @@ test('manifest มีชื่อ scope standalone และ icon ของ Dash
   assert.equal(manifest.name, 'ORQ คิวห้องผ่าตัด');
   assert.equal(manifest.short_name, 'ORQ');
   assert.equal(manifest.start_url, '/Index.html');
-  assert.equal(manifest.scope, '/');
+  assert.equal(manifest.scope, '/Index.html');
   assert.equal(manifest.display, 'standalone');
   assert.equal(manifest.theme_color, '#062566');
   assert.deepEqual(manifest.icons[0], {
@@ -45,7 +45,7 @@ test('HTML ทั้งสองหน้าผูก manifest และ runtime
     const html = read(page);
     assert.match(html, new RegExp(`rel=["']manifest["'][^>]+href=["'](?:\\/)?${manifest.replace('.', '\\.') }["']`, 'i'));
     assert.match(html, /pwa\/runtime\.js/i);
-    assert.match(html, /pwa\/runtime\.js\?v=3/i);
+    assert.match(html, /pwa\/runtime\.js\?v=4/i);
   }
 });
 
@@ -60,6 +60,25 @@ test('Dashboard และ Admin เป็น PWA คนละ identity พร้
   assert.equal(admin.start_url, '/Admin.html?page=admin');
   assert.equal(admin.icons[0].src, 'Icon/orq-admin.png');
   assert.notEqual(dashboard.id, admin.id);
+});
+
+test('Dashboard และ Admin ใช้ scope ไม่ทับกันเพื่อให้ติดตั้งหน้านั้นได้', () => {
+  const dashboard = JSON.parse(read('manifest.webmanifest'));
+  const admin = JSON.parse(read('admin-manifest.webmanifest'));
+
+  assert.equal(dashboard.scope, '/Index.html');
+  assert.equal(admin.scope, '/Admin.html');
+  assert.notEqual(dashboard.scope, admin.scope);
+});
+
+test('runtime ลงทะเบียน service worker ตามหน้าปัจจุบันและไม่ค้าง root scope เดิม', () => {
+  const runtime = read(path.join('pwa', 'runtime.js'));
+
+  assert.match(runtime, /function getPageScope\s*\(/);
+  assert.match(runtime, /Admin\.html/);
+  assert.match(runtime, /Index\.html/);
+  assert.match(runtime, /scope:\s*getPageScope\(\)/);
+  assert.match(runtime, /getRegistrations\(\)/);
 });
 
 test('HTML แต่ละหน้าประกาศ icon สำหรับการสร้างทางลัดบน Android', () => {
@@ -88,7 +107,7 @@ test('runtime cache-busts dynamically loaded PWA scripts', () => {
 
 test('service worker มี cache version, navigation fallback และไม่ cache API', () => {
   const source = read('sw.js');
-  assert.match(source, /orq-pwa-v4/);
+  assert.match(source, /orq-pwa-v5/);
   assert.match(source, /admin-manifest\.webmanifest/);
   assert.match(source, /offline\.html/);
   assert.match(source, /request\.url.*\/api|url\.pathname.*\/api/s);
