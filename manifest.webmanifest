@@ -3,7 +3,7 @@
   "short_name": "ORQ",
   "id": "/Index.html",
   "start_url": "/Index.html",
-  "scope": "/",
+  "scope": "/Index.html",
   "display": "standalone",
   "background_color": "#f4f8fd",
   "theme_color": "#062566",
