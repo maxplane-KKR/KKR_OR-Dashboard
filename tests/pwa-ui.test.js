@@ -232,3 +232,9 @@ test('static Admin routes queue status and delete mutations through sync', async
   assert.equal(harness.document.getElementById('listTableBody').children.length, 0);
   assert.match(harness.document.getElementById('toastRegion').textContent, /sync/);
 });
+
+test('static Admin requests all datalist options without a string payload', () => {
+  const html = fs.readFileSync(adminFile, 'utf8');
+  assert.match(html, /loadSnapshot\('admin:options', function \(\) \{ return getOptions\(\); \}\)/);
+  assert.doesNotMatch(html, /loadSnapshot\('admin:options', function \(\) \{ return getOptions\('surgeryType'\); \}\)/);
+});
