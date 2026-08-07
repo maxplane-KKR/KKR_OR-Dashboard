@@ -60,6 +60,30 @@ test('offline read คืน snapshot ล่าสุด และไม่ม�
   await assert.rejects(manager.loadSnapshot('admin:frequentWords', async () => ({ ok: true, data: {} })), (error) => error.code === 'OFFLINE_NO_SNAPSHOT');
 });
 
+test('online read falls back to network when IndexedDB is unavailable', async () => {
+  const createOrSyncManager = loadSync();
+  let loadCalls = 0;
+  const store = {
+    async getSnapshot() {
+      throw Object.assign(new Error('IndexedDB unavailable'), { code: 'STORAGE_UNAVAILABLE' });
+    },
+    async putSnapshot() {
+      throw new Error('should not write when IndexedDB is unavailable');
+    },
+  };
+  const manager = createOrSyncManager({ store, online: () => true });
+
+  const result = await manager.loadSnapshot('dashboard:today', async () => {
+    loadCalls += 1;
+    return { ok: true, data: { items: [{ id: 'q1' }] }, meta: { source: 'network' } };
+  });
+
+  assert.equal(loadCalls, 1);
+  assert.deepEqual(result.data, { items: [{ id: 'q1' }] });
+  assert.equal(result.meta.cached, false);
+  assert.equal(result.meta.storageUnavailable, true);
+});
+
 test('offline mutation ลง outbox และยังไม่เรียก API', async () => {
   const createOrSyncManager = loadSync();
   const store = createStore();
