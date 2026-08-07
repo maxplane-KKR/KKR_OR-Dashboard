@@ -31,17 +31,35 @@ test('manifest มีชื่อ scope standalone และ icon ของ Dash
 });
 
 test('PWA files และ artwork ที่ manifest อ้างถึงมีอยู่จริง', () => {
-  ['sw.js', 'offline.html', 'pwa/runtime.js', 'Icon/orq-dashboard.png', 'Icon/orq-admin.png']
+  ['sw.js', 'offline.html', 'pwa/runtime.js', 'manifest.webmanifest', 'admin-manifest.webmanifest', 'Icon/orq-dashboard.png', 'Icon/orq-admin.png']
     .forEach((name) => assert.equal(fs.existsSync(path.join(root, name)), true, name));
 });
 
 test('HTML ทั้งสองหน้าผูก manifest และ runtime register', () => {
-  for (const page of ['Index.html', 'Admin.html']) {
+  const pageManifests = {
+    'Index.html': 'manifest.webmanifest',
+    'Admin.html': 'admin-manifest.webmanifest',
+  };
+
+  for (const [page, manifest] of Object.entries(pageManifests)) {
     const html = read(page);
-    assert.match(html, /rel=["']manifest["'][^>]+href=["'](?:\/)?manifest\.webmanifest["']/i);
+    assert.match(html, new RegExp(`rel=["']manifest["'][^>]+href=["'](?:\\/)?${manifest.replace('.', '\\.') }["']`, 'i'));
     assert.match(html, /pwa\/runtime\.js/i);
     assert.match(html, /pwa\/runtime\.js\?v=3/i);
   }
+});
+
+test('Dashboard และ Admin เป็น PWA คนละ identity พร้อม icon และ start URL ของตัวเอง', () => {
+  const dashboard = JSON.parse(read('manifest.webmanifest'));
+  const admin = JSON.parse(read('admin-manifest.webmanifest'));
+
+  assert.equal(dashboard.id, '/Index.html');
+  assert.equal(dashboard.start_url, '/Index.html');
+  assert.equal(dashboard.icons[0].src, 'Icon/orq-dashboard.png');
+  assert.equal(admin.id, '/Admin.html');
+  assert.equal(admin.start_url, '/Admin.html?page=admin');
+  assert.equal(admin.icons[0].src, 'Icon/orq-admin.png');
+  assert.notEqual(dashboard.id, admin.id);
 });
 
 test('HTML แต่ละหน้าประกาศ icon สำหรับการสร้างทางลัดบน Android', () => {
@@ -70,7 +88,8 @@ test('runtime cache-busts dynamically loaded PWA scripts', () => {
 
 test('service worker มี cache version, navigation fallback และไม่ cache API', () => {
   const source = read('sw.js');
-  assert.match(source, /orq-pwa-v3/);
+  assert.match(source, /orq-pwa-v4/);
+  assert.match(source, /admin-manifest\.webmanifest/);
   assert.match(source, /offline\.html/);
   assert.match(source, /request\.url.*\/api|url\.pathname.*\/api/s);
   assert.match(source, /respondWith/);
