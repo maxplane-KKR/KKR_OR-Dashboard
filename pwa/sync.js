@@ -53,6 +53,10 @@
       }) };
     }
 
+    function isStorageError(error) {
+      return Boolean(error && ['STORAGE_UNAVAILABLE', 'STORAGE_OPERATION_FAILED'].indexOf(error.code) >= 0);
+    }
+
     function loadSnapshot(key, loader) {
       return store.getSnapshot(key).then(function (snapshot) {
         if (!isOnline()) {
@@ -70,6 +74,18 @@
           return store.putSnapshot(key, response.data).then(function (saved) {
             notify('online');
             return { ok: true, data: response.data, error: null, meta: Object.assign({}, response.meta || {}, { cached: false, savedAt: saved.savedAt }) };
+          }, function (storageError) {
+            if (!isStorageError(storageError)) throw storageError;
+            notify('online', { storageUnavailable: true });
+            return {
+              ok: true,
+              data: response.data,
+              error: null,
+              meta: Object.assign({}, response.meta || {}, {
+                cached: false,
+                storageUnavailable: true
+              })
+            };
           });
         }).catch(function (error) {
           if (snapshot && error && ['NETWORK_ERROR', 'HTTP_ERROR', 'API_UNAVAILABLE'].indexOf(error.code) >= 0) {
@@ -80,7 +96,7 @@
           throw error;
         });
       }, function (error) {
-        if (!error || error.code !== 'STORAGE_UNAVAILABLE') throw error;
+        if (!isStorageError(error)) throw error;
         if (!isOnline()) {
           notify('offline', { error: error, storageUnavailable: true });
           throw error;
