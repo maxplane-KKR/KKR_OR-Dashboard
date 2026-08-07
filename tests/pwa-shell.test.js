@@ -45,7 +45,7 @@ test('HTML ทั้งสองหน้าผูก manifest และ runtime
 
 test('service worker มี cache version, navigation fallback และไม่ cache API', () => {
   const source = read('sw.js');
-  assert.match(source, /orq-pwa-v1/);
+  assert.match(source, /orq-pwa-v2/);
   assert.match(source, /offline\.html/);
   assert.match(source, /request\.url.*\/api|url\.pathname.*\/api/s);
   assert.match(source, /respondWith/);
