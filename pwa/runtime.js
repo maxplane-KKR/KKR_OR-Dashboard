@@ -2,8 +2,25 @@
   'use strict';
 
   var hasAppsScript = Boolean(global.google && global.google.script && global.google.script.run);
-  var PWA_ASSET_VERSION = '3';
+  var PWA_ASSET_VERSION = '4';
   var registrationPromise = Promise.resolve(null);
+
+  function getPageScope() {
+    var pathname = String(global.location && global.location.pathname || '');
+    return /\/Admin\.html$/i.test(pathname) ? './Admin.html' : './Index.html';
+  }
+
+  function unregisterLegacyRootScope() {
+    if (!global.navigator.serviceWorker.getRegistrations) return Promise.resolve([]);
+    var rootScope = new URL('./', global.location.href).href;
+    return global.navigator.serviceWorker.getRegistrations().then(function (registrations) {
+      return Promise.all(registrations.filter(function (registration) {
+        return registration.scope === rootScope;
+      }).map(function (registration) {
+        return registration.unregister();
+      }));
+    });
+  }
 
   function loadScript(path) {
     return new Promise(function (resolve, reject) {
@@ -17,7 +34,8 @@
 
   function register() {
     if (hasAppsScript || !global.navigator || !global.navigator.serviceWorker) return registrationPromise;
-    registrationPromise = global.navigator.serviceWorker.register('sw.js', { scope: './' })
+    registrationPromise = unregisterLegacyRootScope()
+      .then(function () { return global.navigator.serviceWorker.register('sw.js', { scope: getPageScope() }); })
       .catch(function () { return null; });
     return registrationPromise;
   }
