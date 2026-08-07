@@ -2,12 +2,13 @@
   'use strict';
 
   var hasAppsScript = Boolean(global.google && global.google.script && global.google.script.run);
+  var PWA_ASSET_VERSION = '3';
   var registrationPromise = Promise.resolve(null);
 
   function loadScript(path) {
     return new Promise(function (resolve, reject) {
       var script = document.createElement('script');
-      script.src = path;
+      script.src = path + '?v=' + PWA_ASSET_VERSION;
       script.onload = resolve;
       script.onerror = function () { reject(new Error('โหลด PWA runtime ไม่สำเร็จ: ' + path)); };
       document.head.appendChild(script);
